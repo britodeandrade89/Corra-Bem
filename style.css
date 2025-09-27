@@ -1,7 +1,379 @@
-/* Adicionar estas regras ao final do seu arquivo style.css */
+/* --- Variáveis e Reset Básico --- */
+:root {
+    --primary-color: #007bff; /* Azul vibrante */
+    --secondary-color: #6c757d; /* Cinza para elementos secundários */
+    --success-color: #28a745; /* Verde para sucesso/iniciar */
+    --danger-color: #dc3545; /* Vermelho para perigo/parar */
+    --light-bg: #f8f9fa; /* Fundo claro */
+    --dark-text: #212529; /* Texto escuro */
+    --light-text: #ffffff; /* Texto claro */
+    --card-bg: #ffffff;
+    --border-color: #dee2e6;
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    --shadow-medium: rgba(0, 0, 0, 0.15);
+    --spacing-xs: 5px;
+    --spacing-sm: 10px;
+    --spacing-md: 15px;
+    --spacing-lg: 20px;
+    --border-radius: 8px;
+    --font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
 
-.extra-metrics {
-    border-top: 1px solid #eee;
-    padding-top: 15px;
-    margin-top: -5px; /* Ajuste visual */
+body {
+    font-family: var(--font-family);
+    background-color: var(--light-bg);
+    color: var(--dark-text);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: var(--spacing-md);
+    box-sizing: border-box; /* Garante que padding não adicione largura extra */
+}
+
+/* --- Layout Principal --- */
+.screen {
+    width: 100%;
+    max-width: 500px;
+    background: var(--light-bg);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 20px var(--shadow-medium);
+    overflow: hidden; /* Para o header com background */
+    display: none; /* Esconde todas as telas por padrão, JS controla */
+    animation: fadeIn 0.5s ease-out; /* Transição de tela */
+    position: relative; /* Para backdrop de imagem */
+}
+.screen.active {
+    display: block; /* Mostra a tela ativa */
+}
+
+/* --- Animação de FadeIn --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Header Padrão --- */
+.header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #00bfff 100%); /* Gradiente azul */
+    color: var(--light-text);
+    padding: var(--spacing-lg) var(--spacing-md);
+    text-align: center;
+    position: relative;
+    z-index: 10;
+}
+.header h1 {
+    margin: 0;
+    font-size: 1.8em;
+    font-weight: 700;
+}
+.header p {
+    margin: var(--spacing-xs) 0 0;
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+/* --- Botão Voltar (no Header) --- */
+.back-button {
+    position: absolute;
+    left: var(--spacing-md);
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--light-text);
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius);
+    transition: background-color 0.2s ease;
+}
+.back-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.back-button i {
+    margin-right: var(--spacing-xs);
+}
+
+/* --- Conteúdo Principal de Cada Tela --- */
+.content {
+    padding: var(--spacing-lg);
+    background-color: var(--light-bg); /* Fundo branco para o conteúdo */
+}
+
+/* --- Cards (para Stats, Histórico, etc.) --- */
+.card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 8px var(--shadow-light);
+    padding: var(--spacing-md);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-medium);
+}
+
+/* --- Utilitários de Grid --- */
+.grid-2-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+}
+
+/* --- Margins --- */
+.mt-5 { margin-top: var(--spacing-xs); }
+.mt-10 { margin-top: var(--spacing-sm); }
+.mt-20 { margin-top: var(--spacing-lg); }
+.mr-5 { margin-right: var(--spacing-xs); }
+
+/* --- Botões Principais (com ícones) --- */
+.main-button {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: 1.1em;
+    border: none;
+    border-radius: var(--border-radius);
+    color: var(--light-text);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    font-weight: 600;
+}
+.main-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    filter: grayscale(50%); /* Deixa mais cinza */
+}
+.main-button i {
+    margin-right: var(--spacing-sm);
+}
+
+.primary-button { background-color: var(--primary-color); }
+.primary-button:hover:not(:disabled) { background-color: #0056b3; transform: translateY(-1px); }
+
+.button-start { background-color: var(--success-color); }
+.button-start:hover:not(:disabled) { background-color: #218838; transform: translateY(-1px); }
+
+.button-stop { background-color: var(--danger-color); }
+.button-stop:hover:not(:disabled) { background-color: #c82333; transform: translateY(-1px); }
+
+.button-save { background-color: var(--success-color); }
+.button-save:hover:not(:disabled) { background-color: #218838; }
+
+.button-discard { background-color: var(--secondary-color); }
+.button-discard:hover:not(:disabled) { background-color: #5a6268; }
+
+/* --- Activity Selection Screen --- */
+#activitySelection .header {
+    background: linear-gradient(135deg, #42a5f5 0%, #00b0ff 100%); /* Um azul mais leve */
+    padding-bottom: var(--spacing-lg);
+}
+#activitySelection .header::before { /* Fundo visual com imagem IA */
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url('https://via.placeholder.com/500x200/42a5f5/ffffff?text=Background+Runner'); /* Placeholder, use sua IA aqui */
+    background-size: cover;
+    background-position: center;
+    opacity: 0.3;
+    z-index: -1;
+}
+
+.activity-choices {
+    margin-top: var(--spacing-lg);
+}
+.activity-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 120px; /* Altura fixa para os cards */
+    font-size: 1em;
+    font-weight: 600;
+    color: var(--dark-text);
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.activity-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    background-color: var(--light-bg);
+}
+.activity-icon {
+    font-size: 2.5em; /* Tamanho maior para o ícone */
+    margin-bottom: var(--spacing-sm);
+    color: var(--primary-color);
+}
+.activity-btn:hover .activity-icon {
+    color: var(--primary-color);
+}
+
+/* --- Tracker Screen --- */
+#tracker .header h1 {
+    font-size: 1.6em; /* Um pouco menor para caber */
+}
+.map-placeholder {
+    height: 250px;
+    width: 100%;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+.stats-panel .stat-card {
+    text-align: center;
+    padding: var(--spacing-md) var(--spacing-sm);
+}
+.stat-card h2 {
+    font-size: 0.85em;
+    margin-bottom: var(--spacing-xs);
+    color: var(--secondary-color);
+    font-weight: 500;
+}
+.stat-card p {
+    font-size: 1.4em;
+    font-weight: 700;
+    margin: 0;
+    color: var(--dark-text);
+}
+
+/* --- Histórico --- */
+#history .header {
+    background: linear-gradient(135deg, #6c757d 0%, #adb5bd 100%); /* Gradiente cinza */
+}
+#history .history-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.history-list li {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 5px var(--shadow-light);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-left: 5px solid var(--primary-color); /* Destaque */
+}
+.history-list li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px var(--shadow-medium);
+}
+.history-list li strong {
+    font-size: 1.1em;
+    color: var(--dark-text);
+    display: block;
+    margin-bottom: var(--spacing-xs);
+}
+.history-list li p {
+    font-size: 0.9em;
+    color: var(--secondary-color);
+    margin: 0;
+}
+#historyList p:last-child { margin-bottom: 0; }
+
+
+/* --- Detalhes do Treino --- */
+#workoutDetail .header {
+    background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%); /* Gradiente verde/água */
+}
+.detail-photo {
+    width: 100%;
+    max-height: 200px; /* Limita a altura para não ficar muito grande */
+    object-fit: cover; /* Garante que a imagem preencha sem distorcer */
+    border-radius: var(--border-radius);
+    margin-top: var(--spacing-md);
+    border: 1px solid var(--border-color);
+}
+.stats-detail-panel {
+    padding: var(--spacing-md);
+}
+.stats-detail-panel p {
+    margin: var(--spacing-xs) 0;
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+.stats-detail-panel strong {
+    color: var(--dark-text);
+    min-width: 80px; /* Alinhamento visual */
+    display: inline-block;
+}
+
+/* --- Modal --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Fundo mais escuro */
+    display: flex; justify-content: center; align-items: center;
+    z-index: 2000; /* Acima de tudo */
+    padding: var(--spacing-md);
+    box-sizing: border-box;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+.modal-content {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    width: 100%; max-width: 400px;
+    text-align: center;
+    box-shadow: 0 5px 25px var(--shadow-medium);
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+.modal-overlay.active .modal-content {
+    transform: translateY(0);
+}
+.modal-content h2 {
+    color: var(--dark-text);
+    margin-top: 0;
+    font-size: 1.5em;
+}
+.summary-stats {
+    text-align: left;
+    margin-bottom: var(--spacing-lg);
+}
+.summary-stats p {
+    font-size: 1.1em;
+    margin: var(--spacing-xs) 0;
+    line-height: 1.4;
+}
+.photo-upload {
+    margin-top: var(--spacing-md);
+}
+.photo-upload label {
+    display: block;
+    cursor: pointer;
+    margin-bottom: var(--spacing-md);
+}
+#photoInput {
+    display: none;
+}
+.photo-preview {
+    max-width: 100%;
+    max-height: 150px;
+    object-fit: cover;
+    border-radius: var(--border-radius);
+    margin-top: var(--spacing-md);
+    border: 1px solid var(--border-color);
+}
+.modal-actions {
+    margin-top: var(--spacing-lg);
+}
+
+/* --- Responsividade (celulares pequenos) --- */
+@media (max-width: 380px) {
+    .header h1 { font-size: 1.6em; }
+    .stat-card p { font-size: 1.2em; }
+    .main-button { font-size: 1em; padding: var(--spacing-sm) var(--spacing-md); }
 }
