@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Rastreador de Corrida Web</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Rastreador de Corrida Web</h1>
+
+        <div id="map"></div>
+
+        <div class="stats-panel">
+            <div class="stat">
+                <h2>Tempo</h2>
+                <p id="time">00:00:00</p>
+            </div>
+            <div class="stat">
+                <h2>Distância</h2>
+                <p id="distance">0.00 km</p>
+            </div>
+            <div class="stat">
+                <h2>Ritmo (Pace)</h2>
+                <p id="pace">--:-- /km</p>
+            </div>
+            <div class="stat">
+                <h2>Velocidade</h2>
+                <p id="speed">0.0 km/h</p>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="startButton" class="button-start">Iniciar</button>
+            <button id="stopButton" class="button-stop" disabled>Parar</button>
+        </div>
+
+        <div class="json-output">
+            <h2>Dados da Atividade (JSON)</h2>
+            <pre id="jsonOutput">Aguardando o fim da atividade...</pre>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+    
+    <script src="script.js"></script>
+</body>
+</html>
