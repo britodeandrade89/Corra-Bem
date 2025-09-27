@@ -6,78 +6,110 @@
     <title>AB Fit outdoor</title>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="activitySelection" class="container">
-        <h1>AB Fit outdoor</h1>
-        <h2>Escolha sua atividade</h2>
-        <div class="activity-choices">
-            <button class="activity-btn" data-activity="Caminhada outdoor">🚶‍♀️ Caminhada</button>
-            <button class="activity-btn" data-activity="Corrida outdoor">🏃‍♂️ Corrida</button>
-            <button class="activity-btn" data-activity="Ciclismo Outdoor">🚴‍♀️ Ciclismo</button>
-            <button class="activity-btn" data-activity="Remo Outdoor">🚣‍♂️ Remo</button>
+    <div id="activitySelection" class="screen active">
+        <div class="header">
+            <h1>AB Fit outdoor</h1>
+            <p>Sua jornada começa aqui. Escolha sua atividade.</p>
         </div>
-        <button id="historyButton" class="button-secondary">Ver Histórico de Treinos</button>
-    </div>
-
-    <div id="tracker" class="container" style="display: none;">
-        <h1 id="activityTitle"></h1>
-        <div id="map"></div>
-        
-        <div class="stats-panel">
-            <div class="stat"><h2>Tempo</h2><p id="time">00:00:00</p></div>
-            <div class="stat"><h2>Distância</h2><p id="distance">0.00 km</p></div>
-            <div class="stat"><h2>Ritmo Atual</h2><p id="pace">--:-- /km</p></div>
-            <div class="stat"><h2>Velocidade</h2><p id="speed">0.0 km/h</p></div>
-        </div>
-
-        <div id="extraMetrics" class="stats-panel extra-metrics" style="display: none;">
-            <div class="stat"><h2>Ritmo Médio</h2><p id="avgPace">--:-- /km</p></div>
-            <div class="stat"><h2>Velocidade Média</h2><p id="avgSpeed">0.0 km/h</p></div>
-            <div class="stat"><h2>Ganho de Elevação</h2><p id="elevation">0 m</p></div>
-            <div class="stat"><h2>Sensação Térmica</h2><p id="feelsLikeTemp">-- °C</p></div>
-        </div>
-
-        <div class="controls">
-            <button id="startButton" class="button-start">Iniciar</button>
-            <button id="stopButton" class="button-stop" disabled>Finalizar</button>
+        <div class="content">
+            <div class="activity-choices grid-2-cols">
+                <button class="activity-btn card" data-activity="Caminhada outdoor">
+                    <i class="fas fa-walking activity-icon"></i>
+                    <span>Caminhada</span>
+                </button>
+                <button class="activity-btn card" data-activity="Corrida outdoor">
+                    <i class="fas fa-running activity-icon"></i>
+                    <span>Corrida</span>
+                </button>
+                <button class="activity-btn card" data-activity="Ciclismo Outdoor">
+                    <i class="fas fa-biking activity-icon"></i>
+                    <span>Ciclismo</span>
+                </button>
+                <button class="activity-btn card" data-activity="Remo Outdoor">
+                    <i class="fas fa-ship activity-icon"></i>
+                    <span>Remo</span>
+                </button>
+            </div>
+            <button id="historyButton" class="main-button primary-button mt-20">
+                <i class="fas fa-history mr-5"></i> Ver Histórico de Treinos
+            </button>
         </div>
     </div>
 
-    <div id="history" class="container" style="display: none;">...</div>
-    <div id="workoutDetail" class="container" style="display: none;">...</div>
-    <div id="summaryModal" class="modal-overlay" style="display: none;">...</div>
+    <div id="tracker" class="screen">
+        <div class="header">
+            <button class="back-button"><i class="fas fa-arrow-left"></i></button>
+            <h1 id="activityTitle"></h1>
+        </div>
+        <div class="content">
+            <div id="map" class="map-placeholder"></div>
+            
+            <div class="stats-panel grid-2-cols mt-20">
+                <div class="stat-card card"><h2>Tempo</h2><p id="time">00:00:00</p></div>
+                <div class="stat-card card"><h2>Distância</h2><p id="distance">0.00 km</p></div>
+                <div class="stat-card card"><h2>Ritmo Atual</h2><p id="pace">--:-- /km</p></div>
+                <div class="stat-card card"><h2>Velocidade</h2><p id="speed">0.0 km/h</p></div>
+            </div>
+
+            <div id="extraMetrics" class="stats-panel grid-2-cols mt-20" style="display: none;">
+                <div class="stat-card card"><h2>Ritmo Médio</h2><p id="avgPace">--:-- /km</p></div>
+                <div class="stat-card card"><h2>Velocidade Média</h2><p id="avgSpeed">0.0 km/h</p></div>
+                <div class="stat-card card"><h2>Ganho de Elevação</h2><p id="elevation">0 m</p></div>
+                <div class="stat-card card"><h2>Sensação Térmica</h2><p id="feelsLikeTemp">-- °C</p></div>
+            </div>
+
+            <div class="controls mt-20">
+                <button id="startButton" class="main-button button-start"><i class="fas fa-play mr-5"></i> Iniciar</button>
+                <button id="stopButton" class="main-button button-stop" disabled><i class="fas fa-stop mr-5"></i> Finalizar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="history" class="screen">
+        <div class="header">
+            <button class="back-button"><i class="fas fa-arrow-left"></i></button>
+            <h1>Histórico de Treinos</h1>
+        </div>
+        <div class="content">
+            <ul id="historyList" class="history-list">
+                </ul>
+        </div>
+    </div>
     
-    <div id="history" class="container" style="display: none;">
-        <button class="back-button">&larr; Voltar</button>
-        <h1>Histórico de Treinos</h1>
-        <ul id="historyList"></ul>
-    </div>
-    <div id="workoutDetail" class="container" style="display: none;">
-        <button class="back-button">&larr; Voltar ao Histórico</button>
-        <h1 id="detailActivityTitle"></h1>
-        <div id="detailMap"></div>
-        <img id="detailPhoto" src="" alt="Foto do Treino" style="display: none;"/>
-        <div id="detailStats"></div>
-    </div>
-    <div id="summaryModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <h2>Resumo do Treino</h2>
-            <div id="summaryStats"></div>
-            <div class="photo-upload">
-                <label for="photoInput">📸 Adicionar uma foto</label>
-                <input type="file" id="photoInput" accept="image/*">
-                <img id="photoPreview" src="" alt="Prévia da foto" style="display: none;" />
-            </div>
-            <div class="modal-actions">
-                <button id="saveButton" class="button-save">Salvar Treino</button>
-                <button id="discardButton" class="button-discard">Descartar</button>
-            </div>
+    <div id="workoutDetail" class="screen">
+        <div class="header">
+            <button class="back-button"><i class="fas fa-arrow-left"></i></button>
+            <h1 id="detailActivityTitle"></h1>
+        </div>
+        <div class="content">
+            <div id="detailMap" class="map-placeholder"></div>
+            <img id="detailPhoto" src="" alt="Foto do Treino" class="detail-photo" style="display: none;"/>
+            <div id="detailStats" class="stats-detail-panel card mt-20">
+                </div>
         </div>
     </div>
 
+    <div id="summaryModal" class="modal-overlay">
+        <div class="modal-content card">
+            <h2>Treino Finalizado!</h2>
+            <div id="summaryStats" class="summary-stats">
+                </div>
+            <div class="photo-upload">
+                <label for="photoInput" class="main-button primary-button"><i class="fas fa-camera mr-5"></i> Adicionar uma foto</label>
+                <input type="file" id="photoInput" accept="image/*">
+                <img id="photoPreview" src="" alt="Prévia da foto" class="photo-preview" style="display: none;" />
+            </div>
+            <div class="modal-actions grid-2-cols mt-20">
+                <button id="saveButton" class="main-button button-save"><i class="fas fa-save mr-5"></i> Salvar Treino</button>
+                <button id="discardButton" class="main-button button-discard"><i class="fas fa-trash-alt mr-5"></i> Descartar</button>
+            </div>
+        </div>
+    </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="script.js"></script>
