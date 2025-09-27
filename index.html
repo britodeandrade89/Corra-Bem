@@ -25,25 +25,36 @@
     <div id="tracker" class="container" style="display: none;">
         <h1 id="activityTitle"></h1>
         <div id="map"></div>
+        
         <div class="stats-panel">
             <div class="stat"><h2>Tempo</h2><p id="time">00:00:00</p></div>
             <div class="stat"><h2>Distância</h2><p id="distance">0.00 km</p></div>
-            <div class="stat"><h2>Ritmo (Pace)</h2><p id="pace">--:-- /km</p></div>
+            <div class="stat"><h2>Ritmo Atual</h2><p id="pace">--:-- /km</p></div>
             <div class="stat"><h2>Velocidade</h2><p id="speed">0.0 km/h</p></div>
         </div>
+
+        <div id="extraMetrics" class="stats-panel extra-metrics" style="display: none;">
+            <div class="stat"><h2>Ritmo Médio</h2><p id="avgPace">--:-- /km</p></div>
+            <div class="stat"><h2>Velocidade Média</h2><p id="avgSpeed">0.0 km/h</p></div>
+            <div class="stat"><h2>Ganho de Elevação</h2><p id="elevation">0 m</p></div>
+            <div class="stat"><h2>Sensação Térmica</h2><p id="feelsLikeTemp">-- °C</p></div>
+        </div>
+
         <div class="controls">
             <button id="startButton" class="button-start">Iniciar</button>
             <button id="stopButton" class="button-stop" disabled>Finalizar</button>
         </div>
     </div>
 
+    <div id="history" class="container" style="display: none;">...</div>
+    <div id="workoutDetail" class="container" style="display: none;">...</div>
+    <div id="summaryModal" class="modal-overlay" style="display: none;">...</div>
+    
     <div id="history" class="container" style="display: none;">
         <button class="back-button">&larr; Voltar</button>
         <h1>Histórico de Treinos</h1>
-        <ul id="historyList">
-            </ul>
+        <ul id="historyList"></ul>
     </div>
-    
     <div id="workoutDetail" class="container" style="display: none;">
         <button class="back-button">&larr; Voltar ao Histórico</button>
         <h1 id="detailActivityTitle"></h1>
@@ -51,7 +62,6 @@
         <img id="detailPhoto" src="" alt="Foto do Treino" style="display: none;"/>
         <div id="detailStats"></div>
     </div>
-
     <div id="summaryModal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <h2>Resumo do Treino</h2>
@@ -67,6 +77,7 @@
             </div>
         </div>
     </div>
+
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="script.js"></script>
