@@ -1,0 +1,66 @@
+{
+  "appInfo": {
+    "name": "AB Fit Outdoor",
+    "version": "2.0.0",
+    "description": "Aplicativo de assessoria esportiva com monitoramento de treinos, atividades outdoor e análise de sono"
+  },
+  "defaultSettings": {
+    "theme": "dark",
+    "notifications": true,
+    "autoSave": true,
+    "sleepTracking": {
+      "sensitivity": "medium",
+      "snoreDetection": true,
+      "movementThreshold": 12
+    },
+    "outdoorTracking": {
+      "gpsAccuracy": "high",
+      "autoPause": true,
+      "voiceFeedback": false
+    }
+  },
+  "trainingMethods": {
+    "FARTLEK": {
+      "description": "Treino de variação de ritmo",
+      "color": "#3b82f6",
+      "intensity": "alta"
+    },
+    "INTERVALADO": {
+      "description": "Treino com períodos de esforço e recuperação",
+      "color": "#ef4444",
+      "intensity": "muito alta"
+    },
+    "LONGÃO": {
+      "description": "Treino contínuo de longa duração",
+      "color": "#10b981",
+      "intensity": "moderada"
+    },
+    "RITMO": {
+      "description": "Manutenção de ritmo constante",
+      "color": "#eab308",
+      "intensity": "média"
+    }
+  },
+  "activityTypes": [
+    {
+      "name": "Corrida",
+      "icon": "running",
+      "color": "#ef4444"
+    },
+    {
+      "name": "Caminhada",
+      "icon": "walking",
+      "color": "#3b82f6"
+    },
+    {
+      "name": "Ciclismo",
+      "icon": "bicycle",
+      "color": "#10b981"
+    },
+    {
+      "name": "Natação",
+      "icon": "swimmer",
+      "color": "#06b6d4"
+    }
+  ]
+}
