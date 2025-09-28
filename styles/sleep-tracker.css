@@ -1,0 +1,58 @@
+.sleep-quality-excellent { color: #10b981; }
+.sleep-quality-good { color: #3b82f6; }
+.sleep-quality-fair { color: #f59e0b; }
+.sleep-quality-poor { color: #ef4444; }
+
+#volumeMeter { 
+    width: 100%; 
+    height: 10px; 
+    background-color: #374151; 
+    border-radius: 5px; 
+    overflow: hidden; 
+}
+#volumeBar { 
+    height: 100%; 
+    width: 0%; 
+    background-color: #3b82f6; 
+    transition: width 0.1s linear; 
+}
+
+.sleep-phase-bar { 
+    height: 20px; 
+    border-radius: 4px; 
+    margin-bottom: 5px; 
+}
+.sleep-phase-rem { background-color: #8b5cf6; }
+.sleep-phase-light { background-color: #3b82f6; }
+.sleep-phase-deep { background-color: #1e40af; }
+.sleep-phase-awake { background-color: #ef4444; }
+
+.progress-ring {
+    transform: rotate(-90deg);
+}
+
+.progress-ring-circle {
+    transition: stroke-dashoffset 0.5s;
+    transform-origin: 50% 50%;
+}
+
+.sleep-analysis-card {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border: 1px solid #334155;
+}
+
+.sleep-stat-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sleep-tracking-active {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+}
