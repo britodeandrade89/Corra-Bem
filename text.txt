@@ -1,6 +1,0 @@
-
-## 🔧 Instalação e Uso
-
-1. **Clone ou baixe os arquivos**
-   ```bash
-   git clone [url-do-repositorio]
