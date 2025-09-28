@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>AB Fit - Assessoria</title>
+    <title>AB Fit Outdoor - Assessoria</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/feather-icons"></script>
@@ -11,12 +11,21 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <style>
+        /* --- ESTILOS GERAIS E LAYOUT --- */
         body { font-family: 'Inter', sans-serif; background-color: #000; margin: 0; padding: 0; }
-        .screen { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow-y: auto; background-color: #000; }
+        .screen {
+            display: none; position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%; overflow-y: auto; background-color: #000;
+        }
         .screen.active { display: block; }
         #splashScreen.fade-out { opacity: 0; transition: opacity 0.5s; }
 
-        .calendar-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; border: 1px solid #374151; }
+        /* --- CALENDÁRIO --- */
+        .calendar-day {
+            aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+            border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+            border: 1px solid #374151;
+        }
         .calendar-day:hover { transform: scale(1.05); }
         .calendar-day.treino-A { background-color: #3b82f6; color: white; border-color: #3b82f6; }
         .calendar-day.treino-B { background-color: #10b981; color: white; border-color: #10b981; }
@@ -24,11 +33,21 @@
         .calendar-day.empty { background-color: transparent; cursor: default; border: none; }
         .calendar-day.today { border: 2px solid #ef4444; background-color: #1f2937; }
 
-        .running-title-fartlek { color: #3b82f6; } .running-title-intervalado { color: #ef4444; }
-        .running-title-longão { color: #10b981; } .running-title-ritmo { color: #eab308; }
-        .running-title-tiros { color: #f97316; } .running-title-caminhada { color: #a855f7; }
+        /* --- TELA DE CORRIDA --- */
+        .running-title-fartlek { color: #3b82f6; } /* Azul */
+        .running-title-intervalado { color: #ef4444; } /* Vermelho */
+        .running-title-longão { color: #10b981; } /* Verde */
+        .running-title-ritmo { color: #eab308; } /* Amarelo */
+        .running-title-tiros { color: #f97316; } /* Laranja */
+        .running-title-caminhada { color: #a855f7; } /* Roxo */
 
-        .outdoor-activity-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100px; font-size: 0.9em; font-weight: 600; color: white; background-color: #1f2937; border: 2px solid #374151; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; }
+        /* --- TELA OUTDOOR --- */
+        .outdoor-activity-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100px; font-size: 0.9em; font-weight: 600; color: white;
+            background-color: #1f2937; border: 2px solid #374151; border-radius: 12px;
+            cursor: pointer; transition: all 0.2s ease;
+        }
         .outdoor-activity-btn:hover { border-color: #3b82f6; background-color: #374151; }
         .outdoor-activity-icon { font-size: 2em; margin-bottom: 8px; color: #60a5fa; }
         #outdoorMap, #sleep-analysis-placeholder { height: 250px; width: 100%; border-radius: 12px; border: 2px solid #374151; background-color: #1f2937; }
@@ -40,261 +59,84 @@
 <body class="overscroll-none">
 
     <div id="splashScreen" class="w-full h-screen flex flex-col items-center justify-center bg-black">
-        <img src="https://i.ibb.co/P9T5YQJ/logo-ab-fit-512.png" alt="Logo AB Fit" class="w-40 h-40">
-        <h1 class="text-4xl font-bold text-white mt-4">AB<span class="text-red-500">FIT</span></h1>
+        <img src="https://i.ibb.co/P9T5YQJ/logo-ab-fit-512.png" alt="Logo AB Fit Outdoor" class="w-40 h-40">
+        <h1 class="text-4xl font-bold text-white mt-4">AB Fit <span class="text-red-500">Outdoor</span></h1>
     </div>
 
     <div id="appContainer" class="hidden h-screen flex flex-col max-w-lg mx-auto bg-black">
         <main class="flex-grow relative overflow-hidden">
 
-            <div id="loginScreen" class="screen active p-6"></div>
-            <div id="studentListScreen" class="screen p-6"></div>
-            <div id="studentProfileScreen" class="screen p-6 pt-10"></div>
-            <div id="trainingScreen" class="screen p-6 pt-10"></div>
-            <div id="outdoorScreen" class="screen p-6 pt-10"></div>
+            <div id="loginScreen" class="screen active p-6">
+                <header class="text-center pt-6 pb-8">
+                    <img src="https://i.ibb.co/P9T5YQJ/logo-ab-fit-512.png" alt="Logo AB Fit Outdoor" class="w-24 h-24 mx-auto">
+                </header>
+                <h1 class="text-3xl font-extrabold text-white mb-4 text-center">AB Fit <span class="text-red-500">Outdoor</span></h1>
+                <div class="bg-red-600 text-white p-4 rounded-xl mb-6 shadow-lg shadow-red-500/20">
+                    <div class="flex items-center mb-1">
+                        <i data-feather="lock" class="w-5 h-5 mr-2"></i><h3 class="font-bold text-lg">Acesse Seu Perfil</h3>
+                    </div>
+                    <p class="text-sm font-bold">Selecione seu perfil para continuar</p>
+                </div>
+                <div id="user-selection-container" class="space-y-3"></div>
+            </div>
 
-            <div id="sleepTrackerScreen" class="screen p-6 pt-10">
+            <div id="studentListScreen" class="screen p-6">
+                <h1 class="text-3xl font-extrabold text-white text-center pt-8 pb-4">Alunos</h1>
+                <div id="student-list-container" class="space-y-3"></div>
+            </div>
+
+            <div id="studentProfileScreen" class="screen p-6 pt-10">
+                <div id="student-profile-info" class="flex items-center p-4 bg-gray-900 border border-gray-700 rounded-xl mb-6"></div>
+                <div id="student-profile-buttons" class="grid grid-cols-2 gap-4 mb-6"></div>
+                <div class="bg-gray-900 p-4 rounded-xl border border-gray-700">
+                    <div id="calendar-header" class="flex justify-between items-center mb-4">
+                        <button id="prev-month-btn" class="p-2 rounded-full hover:bg-gray-700"><i data-feather="chevron-left" class="text-gray-300"></i></button>
+                        <h2 id="calendar-month-year" class="font-bold text-lg text-white"></h2>
+                        <button id="next-month-btn" class="p-2 rounded-full hover:bg-gray-700"><i data-feather="chevron-right" class="text-gray-300"></i></button>
+                    </div>
+                    <div class="grid grid-cols-7 gap-1 text-center text-xs text-gray-400 mb-2 font-bold">
+                        <div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div>
+                    </div>
+                    <div id="calendar-grid" class="grid grid-cols-7 gap-1 text-center text-sm"></div>
+                </div>
+            </div>
+
+            <div id="trainingScreen" class="screen p-6 pt-10">
+                <header class="flex items-center justify-between pb-4">
+                    <button class="back-btn p-2 rounded-full hover:bg-gray-800" data-target="studentProfileScreen"><i data-feather="arrow-left" class="text-gray-300"></i></button>
+                    <h1 id="training-title" class="text-2xl font-bold text-white">Treino</h1>
+                    <div class="w-10"></div>
+                </header>
+                <div id="training-content-wrapper" class="space-y-3 pb-24"></div>
+            </div>
+
+            <div id="outdoorScreen" class="screen p-6 pt-10">
                  <header class="flex items-center justify-between pb-4">
                     <button class="back-btn p-2 rounded-full hover:bg-gray-800" data-target="studentProfileScreen"><i data-feather="arrow-left" class="text-gray-300"></i></button>
-                    <h1 class="text-2xl font-bold text-white">Monitor de Sono</h1>
+                    <h1 class="text-2xl font-bold text-white">AB Fit Outdoor</h1>
                     <div class="w-10"></div>
                 </header>
                 <div class="space-y-4 pb-24">
-                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-700 text-center">
-                        <i class="fas fa-moon text-blue-400 text-5xl mb-4"></i>
-                        <h2 class="text-xl font-bold text-white mb-2">Pronto para descansar?</h2>
-                        <p class="text-gray-400 text-sm mb-6 font-bold">Coloque seu celular na cama, perto de você, e inicie o monitoramento para uma análise básica do seu sono.</p>
-                        <div id="sleep-tracker-controls">
-                            <button id="startSleepBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg"><i class="fas fa-play mr-2"></i> Iniciar Monitoramento</button>
-                        </div>
-                        <div id="sleep-tracker-active" class="hidden">
-                             <div class="grid grid-cols-2 gap-3 mb-4">
-                                <div class="bg-gray-800 p-3 rounded-lg"><h2 class="text-sm text-gray-400 font-bold">Duração</h2><p id="sleepDuration" class="text-xl font-bold text-white">00:00:00</p></div>
-                                <div class="bg-gray-800 p-3 rounded-lg"><h2 class="text-sm text-gray-400 font-bold">Movimentos</h2><p id="sleepMovements" class="text-xl font-bold text-white">0</p></div>
-                                <div class="bg-gray-800 p-3 rounded-lg col-span-2"><h2 class="text-sm text-gray-400 font-bold">Picos de Ruído</h2><p id="sleepNoises" class="text-xl font-bold text-white">0</p></div>
-                            </div>
-                            <div class="my-4">
-                                <p class="text-sm text-gray-400 mb-2 font-bold">Nível de Ruído Ambiente</p>
-                                <div id="volumeMeter"><div id="volumeBar"></div></div>
-                            </div>
-                            <button id="stopSleepBtn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-lg"><i class="fas fa-stop mr-2"></i> Parar e Salvar</button>
+                    <div id="outdoorMap" class="mb-4"></div>
+                    <div id="outdoor-selection" class="bg-gray-900 p-4 rounded-xl border border-gray-700">
+                        <h2 class="text-xl font-bold text-white mb-4 text-center">Escolha sua Atividade</h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button class="outdoor-activity-btn" data-activity="Caminhada"><i class="fas fa-walking outdoor-activity-icon"></i><span>Caminhada</span></button>
+                            <button class="outdoor-activity-btn" data-activity="Corrida"><i class="fas fa-running outdoor-activity-icon"></i><span>Corrida</span></button>
+                            <button class="outdoor-activity-btn" data-activity="Ciclismo"><i class="fas fa-biking outdoor-activity-icon"></i><span>Ciclismo</span></button>
+                             <button class="outdoor-activity-btn" data-activity="Outro"><i class="fas fa-map-marked-alt outdoor-activity-icon"></i><span>Outro</span></button>
                         </div>
                     </div>
-                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-700">
-                        <h2 class="text-xl font-bold text-white mb-4 text-center">Seu Histórico de Sono</h2>
-                        <div id="sleepHistoryList" class="space-y-3">
-                            <p class="text-gray-400 text-center font-bold">Nenhum registro de sono.</p>
+                    <div id="outdoorTracker" class="hidden bg-gray-900 p-4 rounded-xl border border-gray-700">
+                        <div class="grid grid-cols-2 gap-3 mb-4">
+                            <div class="bg-gray-800 p-3 rounded-lg text-center"><h2 class="text-sm text-gray-400 font-bold">Tempo</h2><p id="outdoorTime" class="text-xl font-bold text-white">00:00:00</p></div>
+                            <div class="bg-gray-800 p-3 rounded-lg text-center"><h2 class="text-sm text-gray-400 font-bold">Distância</h2><p id="outdoorDistance" class="text-xl font-bold text-white">0.00 km</p></div>
+                            <div class="bg-gray-800 p-3 rounded-lg text-center"><h2 class="text-sm text-gray-400 font-bold">Ritmo</h2><p id="outdoorPace" class="text-xl font-bold text-white">--:-- /km</p></div>
+                            <div class="bg-gray-800 p-3 rounded-lg text-center"><h2 class="text-sm text-gray-400 font-bold">Velocidade</h2><p id="outdoorSpeed" class="text-xl font-bold text-white">0.0 km/h</p></div>
+                        </div>
+                        <div class="flex space-x-4">
+                            <button id="outdoorStartButton" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg"><i class="fas fa-play mr-2"></i> Iniciar</button>
+                            <button id="outdoorStopButton" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg" disabled><i class="fas fa-stop mr-2"></i> Parar</button>
                         </div>
                     </div>
-                </div>
-            </div>
-
-        </main>
-
-        <footer id="bottom-nav" class="flex-shrink-0 bg-gray-900 border-t border-gray-700 hidden"></footer>
-    </div>
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    // === BANCO DE DADOS E ESTADO GLOBAL ===
-    let database = {};
-    let currentStudentEmail = null;
-    let currentCalendarDate = new Date();
-    // ... (outras variáveis globais existentes)
-    let sleepStartTime, sleepTimerInterval, audioContext, microphone, analyser, motionListener;
-    let noiseCount = 0, movementCount = 0;
-
-    // === INICIALIZAÇÃO E LÓGICAS EXISTENTES ===
-    // Todas as funções loadDatabase, saveDatabase, showScreen, populate, etc., continuam aqui
-    // A única alteração será na populateStudentProfile para adicionar o novo botão.
-    
-    function populateStudentProfile(studentEmail) {
-        currentStudentEmail = studentEmail;
-        const student = database.users.find(s => s.email === studentEmail);
-        if (!student) return;
-
-        document.getElementById('student-profile-info').innerHTML = ``;
-        // ADICIONADO O BOTÃO DE SONO
-        document.getElementById('student-profile-buttons').innerHTML = `
-            <button class="profile-action-btn bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl flex flex-col items-center justify-center space-y-1" data-action="A"><i data-feather="shield"></i><span class="text-xs font-bold">TREINO A</span></button>
-            <button class="profile-action-btn bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl flex flex-col items-center justify-center space-y-1" data-action="B"><i data-feather="zap"></i><span class="text-xs font-bold">TREINO B</span></button>
-            <button class="profile-action-btn bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl flex flex-col items-center justify-center space-y-1" data-action="corrida"><i data-feather="trending-up"></i><span class="text-xs font-bold">CORRIDA</span></button>
-            <button class="profile-action-btn bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 rounded-xl flex flex-col items-center justify-center space-y-1" data-action="periodizacao"><i data-feather="calendar"></i><span class="text-xs font-bold">PERIODIZAÇÃO</span></button>
-            <button class="profile-action-btn bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-xl flex flex-col items-center justify-center space-y-1" data-action="outdoor"><i data-feather="map-pin"></i><span class="text-xs font-bold">OUTDOOR</span></button>
-            <button class="profile-action-btn bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-xl flex flex-col items-center justify-center space-y-1" data-action="sono"><i data-feather="moon"></i><span class="text-xs font-bold">SONO</span></button>
-        `;
-        feather.replace();
-        renderCalendar();
-    }
-
-    // === NOVAS FUNÇÕES: MONITORAMENTO DE SONO ===
-    function initializeSleepScreen() {
-        document.getElementById('sleep-tracker-controls').style.display = 'block';
-        document.getElementById('sleep-tracker-active').classList.add('hidden');
-        document.getElementById('sleepDuration').textContent = '00:00:00';
-        document.getElementById('sleepMovements').textContent = '0';
-        document.getElementById('sleepNoises').textContent = '0';
-        noiseCount = 0;
-        movementCount = 0;
-        renderSleepHistory();
-    }
-
-    async function startSleepTracking() {
-        try {
-            // 1. Pedir permissão e capturar áudio
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            analyser = audioContext.createAnalyser();
-            microphone = audioContext.createMediaStreamSource(stream);
-            microphone.connect(analyser);
-            analyser.fftSize = 256;
-            const bufferLength = analyser.frequencyBinCount;
-            const dataArray = new Uint8Array(bufferLength);
-            
-            // 2. Iniciar monitoramento de movimento
-            motionListener = (event) => {
-                const { x, y, z } = event.accelerationIncludingGravity;
-                const acceleration = Math.sqrt(x*x + y*y + z*z);
-                // Um valor > 12 é um movimento brusco (ajuste conforme necessário)
-                if (acceleration > 12) {
-                    movementCount++;
-                    document.getElementById('sleepMovements').textContent = movementCount;
-                }
-            };
-            window.addEventListener('devicemotion', motionListener);
-
-            // 3. Iniciar timers e UI
-            sleepStartTime = Date.now();
-            document.getElementById('sleep-tracker-controls').style.display = 'none';
-            document.getElementById('sleep-tracker-active').classList.remove('hidden');
-
-            sleepTimerInterval = setInterval(() => {
-                const diff = Math.floor((Date.now() - sleepStartTime) / 1000);
-                const h = String(Math.floor(diff / 3600)).padStart(2, '0');
-                const m = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
-                const s = String(diff % 60).padStart(2, '0');
-                document.getElementById('sleepDuration').textContent = `${h}:${m}:${s}`;
-                
-                // Análise de áudio
-                analyser.getByteFrequencyData(dataArray);
-                let sum = dataArray.reduce((a, b) => a + b, 0);
-                let average = sum / bufferLength;
-                document.getElementById('volumeBar').style.width = `${average}%`;
-                // Um valor > 50 é um pico de ruído (ajuste conforme necessário)
-                if (average > 50) {
-                    noiseCount++;
-                    document.getElementById('sleepNoises').textContent = noiseCount;
-                }
-            }, 500); // Roda a cada meio segundo
-
-        } catch (err) {
-            alert('Erro ao acessar microfone ou sensores. Por favor, conceda a permissão.');
-            console.error(err);
-        }
-    }
-
-    function stopSleepTracking() {
-        // Parar timers e listeners
-        clearInterval(sleepTimerInterval);
-        window.removeEventListener('devicemotion', motionListener);
-        if (microphone) microphone.mediaStream.getTracks().forEach(track => track.stop());
-        if (audioContext) audioContext.close();
-
-        // Salvar o registro
-        const sleepRecord = {
-            date: new Date().toISOString(),
-            duration: document.getElementById('sleepDuration').textContent,
-            movements: movementCount,
-            noises: noiseCount
-        };
-        if (!database.sleepHistory) database.sleepHistory = {};
-        if (!database.sleepHistory[currentStudentEmail]) database.sleepHistory[currentStudentEmail] = [];
-        database.sleepHistory[currentStudentEmail].push(sleepRecord);
-        saveDatabase();
-
-        // Resetar UI
-        initializeSleepScreen();
-    }
-
-    function renderSleepHistory() {
-        const historyContainer = document.getElementById('sleepHistoryList');
-        const history = (database.sleepHistory && database.sleepHistory[currentStudentEmail]) || [];
-        if (history.length === 0) {
-            historyContainer.innerHTML = '<p class="text-gray-400 text-center font-bold">Nenhum registro de sono.</p>';
-            return;
-        }
-        historyContainer.innerHTML = history.slice().reverse().map(rec => `
-            <div class="bg-gray-800 p-3 rounded-lg flex justify-between items-center">
-                <div>
-                    <h4 class="font-bold text-white">${new Date(rec.date).toLocaleDateString('pt-BR')}</h4>
-                    <p class="text-gray-400 text-sm font-bold">Duração: ${rec.duration}</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-white font-bold">${rec.movements} mov.</p>
-                    <p class="text-gray-400 text-sm font-bold">${rec.noises} ruídos</p>
-                </div>
-            </div>
-        `).join('');
-    }
-
-
-    // === EVENT LISTENERS ===
-    document.body.addEventListener('click', (e) => {
-        // ... (listeners existentes: login, alunos, nav, back, calendário, outdoor)
-        
-        // Listener para as ações do perfil
-        const actionBtn = e.target.closest('.profile-action-btn');
-        if (actionBtn) {
-            const action = actionBtn.dataset.action;
-            if (action === 'A' || action === 'B') { /* ... */ }
-            else if (action === 'corrida') { /* ... */ }
-            else if (action === 'outdoor') { /* ... */ }
-            else if (action === 'sono') { // NOVO
-                initializeSleepScreen();
-                showScreen('sleepTrackerScreen');
-            }
-            // ...
-            return;
-        }
-
-        // Listeners para os botões da tela de sono
-        if (e.target.closest('#startSleepBtn')) startSleepTracking();
-        if (e.target.closest('#stopSleepBtn')) stopSleepTracking();
-    });
-
-    // === INICIALIZAÇÃO DO APP ===
-    function initApp() {
-        // ... (código de inicialização existente)
-    }
-
-    // Para economizar espaço, o código completo das funções não alteradas e do initApp não foi repetido.
-    // Cole este script completo no seu arquivo, substituindo as funções modificadas e adicionando as novas.
-    // O código abaixo é o restante do script para garantir que tudo funcione.
-    
-    // ===================================================================
-    // CÓDIGO RESTANTE (COPIADO DA VERSÃO ANTERIOR PARA COMPLETUDE)
-    // ===================================================================
-    function loadDatabase(){const t=localStorage.getItem("abfit_database");t?database=JSON.parse(t):(database={users:[{id:1,name:"André Brito",email:"britodeandrade@gmail.com",photo:"https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/WsTwhcQeE99iAkUHmCmn/pub/3Zy4n6ZmWp9DW98VtXpO.jpeg"},{id:2,name:"Marcelly Bispo",email:"marcellybispo92@gmail.com",photo:"https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/WsTwhcQeE99iAkUHmCmn/pub/2VWhNV4eSyDNkwEzPGvq.jpeg"},{id:3,name:"Marcia Brito",email:"andrademarcia.ucam@gmail.com",photo:"https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/WsTwhcQeE99iAkUHmCmn/pub/huS3I3wDTHbXGY1EuLjf.jpg"},{id:4,name:"Liliane Torres",email:"lilicatorres@gmail.com",photo:"https://i.ibb.co/7j6x0gG/liliane-torres.jpg"}],trainingPlans:{},userRunningWorkouts:{'britodeandrade@gmail.com':[{date:"26/9",method:"FARTLEK",details:"5' AQ + 20' CO alternado entre CA : CO + 5' REC",speed:"8,5 Km/h",pace:"7:00/Km",time:"30 min"},{date:"27/9",method:"INTERVALADO",details:"5' AQ + (6 BLOCOS) 2' CO : 1'30'' REC + 3' REC",speed:"9,5 Km/h",pace:"6:19/Km",time:"30 min"},{date:"28/9",method:"LONGÃO",details:"5' AQ + 3 KM DE CO CONTÍNUA + 5' REC",speed:"8,5 Km/h",pace:"7:04/Km",time:"30 min"}],'marcellybispo92@gmail.com':[{date:"26/9",method:"FARTLEK",details:"5' AQ + 20' CO alternado entre CA : CO + 5' REC",speed:"7,5 Km/h",pace:"8:00/Km",time:"30 min"},{date:"27/9",method:"INTERVALADO",details:"5' AQ + (6 BLOCOS) 2' CO : 1'30'' REC + 3' REC",speed:"8,5 Km/h",pace:"7:04/Km",time:"30 min"}],'andrademarcia.ucam@gmail.com':[{date:"29/9",method:"FARTLEK",details:"5' CA Fraca + 25' CA Forte : CA Fraca",speed:"5,5 Km/h",pace:"11:00/Km",time:"30 min"},{date:"30/9",method:"INTERVALADO",details:"5' AQ + (6 BLOCOS) 2' CO : 1'30'' REC + 3' REC",speed:"5,5 Km/h",pace:"11:00/Km",time:"30 min"},{date:"2/10",method:"LONGÃO",details:"5' CA Fraca + 2 KM DE CA CONTÍNUA + 5' CA Fraca",speed:"5,5 Km/h",pace:"11:00/Km",time:"30 min"}],'lilicatorres@gmail.com':[{date:"26/9",method:"FARTLEK",details:"5' CA Fraca + 25' CA Forte : CA Fraca",speed:"5,5 Km/h",pace:"11:00/Km",time:"30 min"},{date:"27/9",method:"INTERVALADO",details:"3' AQ + (8 BLOCOS) 2' CA Forte : 1' CA Fraca + 2' REC",speed:"5,5 Km/h",pace:"11:00/Km",time:"30 min"}]},outdoorWorkouts:{}},database.users.forEach(t=>{database.trainingPlans[t.email]||(database.trainingPlans[t.email]={A:[],B:[],periodizacao:[],attendance:{}}),database.outdoorWorkouts[t.email]||(database.outdoorWorkouts[t.email]=[])}),saveDatabase())}
-    function saveDatabase(){localStorage.setItem("abfit_database",JSON.stringify(database))}
-    function showScreen(t){document.querySelectorAll(".screen").forEach(t=>t.classList.remove("active"));const e=document.getElementById(t);e&&e.classList.add("active"),document.getElementById("bottom-nav").style.display="loginScreen"!==t?"flex":"none",updateNav(t)}
-    function updateNav(t){document.querySelectorAll(".nav-btn").forEach(e=>{const n=e.dataset.target;e.querySelector("i");"studentProfileScreen"===n&&t.includes("studentProfile")||n===t?(e.classList.add("text-red-500"),e.classList.remove("text-gray-400","hover:text-white")):(e.classList.remove("text-red-500"),e.classList.add("text-gray-400","hover:text-white"))})}
-    function populateUserSelection(){const t=document.getElementById("user-selection-container");t.innerHTML=database.users.map(t=>`<div class="user-card flex items-center p-3 bg-gray-800 rounded-xl border border-gray-700 cursor-pointer hover:bg-gray-700 transition" data-user-email="${t.email}"><img src="${t.photo}" alt="${t.name}" class="w-12 h-12 rounded-full object-cover mr-4"><div class="flex-grow"><p class="font-bold text-white">${t.name}</p><span class="text-sm text-gray-400 font-bold">Acessar meu perfil</span></div><i data-feather="log-in" class="text-red-500"></i></div>`).join(""),feather.replace()}
-    function populateStudentList(){const t=document.getElementById("student-list-container");t.innerHTML=database.users.map(t=>`<div class="student-card flex items-center p-3 bg-gray-800 rounded-xl border border-gray-700 cursor-pointer hover:bg-gray-700 transition" data-student-id="${t.id}"><img src="${t.photo}" alt="${t.name}" class="w-12 h-12 rounded-full object-cover mr-4"><div class="flex-grow"><p class="font-bold text-white">${t.name}</p><span class="text-sm text-gray-400 font-bold">Ver perfil completo</span></div><i data-feather="user" class="text-blue-500"></i></div>`).join(""),feather.replace()}
-    function loadTrainingScreen(t){currentTrainingType=t;const e=[{id:1,name:"Exercício de Força 1",series:"3x10",img:"https://via.placeholder.com/80x80/3b82f6/ffffff?text=E1"},{id:2,name:"Exercício de Força 2",series:"3x12",img:"https://via.placeholder.com/80x80/10b981/ffffff?text=E2"}];document.getElementById("training-title").textContent=`Treino ${t}`;const n=document.getElementById("training-content-wrapper");n.innerHTML=e.map(e=>`<div class="bg-gray-800 p-4 rounded-xl border border-gray-700 flex items-center justify-between"><div class="flex items-center"><img src="${e.img}" class="w-16 h-16 rounded-lg mr-4"><div><p class="font-bold text-white">${e.name}</p><p class="text-gray-300 text-sm font-bold">${e.series}</p></div></div><button class="checkin-btn bg-green-600 hover:bg-green-700 text-white font-bold p-3 rounded-lg" data-training-type="${t}"><i data-feather="check"></i></button></div>`).join(""),feather.replace()}
-    function loadRunningScreen(){const t=database.userRunningWorkouts[currentStudentEmail]||[];document.getElementById("training-title").textContent="Treino de Corrida";const e=document.getElementById("training-content-wrapper");0===t.length?e.innerHTML='<div class="text-center text-gray-400 font-bold">Nenhum treino de corrida cadastrado.</div>':e.innerHTML=t.map(t=>`<div class="bg-gray-800 p-4 rounded-xl border border-gray-700"><h3 class="font-extrabold text-lg ${"running-title-"+t.method.toLowerCase().replace("ã","a")}">${t.method} - ${t.date}</h3><p class="text-white my-2"><strong class="font-bold text-gray-400">Detalhes:</strong> ${t.details}</p><div class="grid grid-cols-2 gap-2 text-sm"><div><span class="text-gray-400 font-bold">Velocidade:</span> <span class="text-white font-bold">${t.speed}</span></div><div><span class="text-gray-400 font-bold">Ritmo:</span> <span class="text-white font-bold">${t.pace}</span></div><div><span class="text-gray-400 font-bold">Tempo:</span> <span class="text-white font-bold">${t.time}</span></div></div></div>`).join("")}
-    function renderCalendar(){const t=database.trainingPlans[currentStudentEmail]&&database.trainingPlans[currentStudentEmail].attendance||{},e=document.getElementById("calendar-month-year"),n=document.getElementById("calendar-grid"),o=currentCalendarDate.getFullYear(),a=currentCalendarDate.getMonth();e.textContent=currentCalendarDate.toLocaleDateString("pt-BR",{month:"long",year:"numeric"}),n.innerHTML="";const i=new Date(o,a,1),d=new Date(o,a+1,0).getDate(),l=i.getDay();for(let t=0;t<l;t++)n.innerHTML+='<div class="calendar-day empty"></div>';const s=new Date().toISOString().split("T")[0];for(let e=1;e<=d;e++){const i=`${o}-${String(a+1).padStart(2,"0")}-${String(e).padStart(2,"0")}`,d=t[i],l=i===s;n.innerHTML+=`<div class="calendar-day ${l?"today":""} ${d?`treino-${d.type}`:""}">${e}</div>`}}
-    function performCheckIn(t){const e=new Date().toISOString().split("T")[0];database.trainingPlans[currentStudentEmail]||(database.trainingPlans[currentStudentEmail]={attendance:{}}),database.trainingPlans[currentStudentEmail].attendance||(database.trainingPlans[currentStudentEmail].attendance={}),database.trainingPlans[currentStudentEmail].attendance[e]={type:t},saveDatabase(),renderCalendar(),alert(`Check-in do Treino ${t} realizado com sucesso!`)}
-    function initializeOutdoorScreen(){outdoorMap&&outdoorMap.remove(),document.getElementById("outdoorTracker").classList.add("hidden"),document.getElementById("outdoor-selection").classList.remove("hidden"),navigator.geolocation.getCurrentPosition(t=>{const{latitude:e,longitude:n}=t.coords;outdoorMap=L.map("outdoorMap").setView([e,n],15),L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'}).addTo(outdoorMap),L.marker([e,n]).addTo(outdoorMap)},()=>{outdoorMap=L.map("outdoorMap").setView([-22.919,-42.822],13),L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png").addTo(outdoorMap),alert("Não foi possível obter sua localização.")}),updateOutdoorHistory()}
-    function startOutdoorTracking(){outdoorStartTime=Date.now(),trackPoints=[],totalDistance=0,lastPosition=null,document.getElementById("outdoorStartButton").disabled=!0,document.getElementById("outdoorStopButton").disabled=!1,outdoorTimerInterval=setInterval(()=>{const t=Math.floor((Date.now()-outdoorStartTime)/1e3),e=String(Math.floor(t/3600)).padStart(2,"0"),n=String(Math.floor(t%3600/60)).padStart(2,"0"),o=String(t%60).padStart(2,"0");document.getElementById("outdoorTime").textContent=`${e}:${n}:${o}`},1e3),outdoorWatchId=navigator.geolocation.watchPosition(t=>{const{latitude:e,longitude:n,speed:o}=t.coords,a={lat:e,lng:n};lastPosition&&(totalDistance+=haversineDistance(lastPosition,a)),lastPosition=a;const i=(totalDistance/1e3).toFixed(2),d=o? (3.6*o).toFixed(1):"0.0",l=o>.5?(60/(3.6*o)).toFixed(2).replace(".",":"):"--:--";document.getElementById("outdoorDistance").textContent=`${i} km`,document.getElementById("outdoorSpeed").textContent=`${d} km/h`,document.getElementById("outdoorPace").textContent=`${l} /km`,outdoorMap.setView(a,16)},()=>alert("Erro no GPS."),{enableHighAccuracy:!0})}
-    function stopOutdoorTracking(){clearInterval(outdoorTimerInterval),navigator.geolocation.clearWatch(outdoorWatchId);const t={activity:currentOutdoorActivity,date:(new Date).toISOString(),distance:document.getElementById("outdoorDistance").textContent.replace(" km",""),duration:document.getElementById("outdoorTime").textContent};database.outdoorWorkouts[currentStudentEmail].push(t),saveDatabase(),updateOutdoorHistory(),document.getElementById("outdoorStartButton").disabled=!1,document.getElementById("outdoorStopButton").disabled=!0,document.getElementById("outdoorTracker").classList.add("hidden"),document.getElementById("outdoor-selection").classList.remove("hidden")}
-    function updateOutdoorHistory(){const t=document.getElementById("outdoorHistoryList"),e=database.outdoorWorkouts[currentStudentEmail]||[];0===e.length?t.innerHTML='<p class="text-gray-400 text-center font-bold">Nenhum treino outdoor registrado.</p>':t.innerHTML=e.slice().reverse().map(t=>`<div class="bg-gray-800 p-3 rounded-lg flex justify-between items-center"><div><h4 class="font-bold text-white">${t.activity}</h4><p class="text-gray-400 text-sm font-bold">${new Date(t.date).toLocaleDateString("pt-BR")}</p></div><div class="text-right"><p class="text-white font-bold">${t.distance} km</p><p class="text-gray-400 text-sm font-bold">${t.duration}</p></div></div>`).join("")}
-    function haversineDistance(t,e){const n=6371e3,o=t.lat*Math.PI/180,a=e.lat*Math.PI/180,i=(e.lat-t.lat)*Math.PI/180,d=(e.lng-t.lng)*Math.PI/180,l=Math.sin(i/2)*Math.sin(i/2)+Math.cos(o)*Math.cos(a)*Math.sin(d/2)*Math.sin(d/2);return n*2*Math.atan2(Math.sqrt(l),Math.sqrt(1-l))}
-    document.body.addEventListener("click",t=>{const e=t.target.closest(".user-card");if(e)return populateStudentProfile(e.dataset.userEmail),void showScreen("studentProfileScreen");const n=t.target.closest(".student-card");if(n){const t=database.users.find(t=>t.id==n.dataset.studentId);return void(t&&(populateStudentProfile(t.email),showScreen("studentProfileScreen")))}const o=t.target.closest(".nav-btn, .back-btn");if(o)return void showScreen(o.dataset.target);const a=t.target.closest(".profile-action-btn");if(a){const t=a.dataset.action;return"A"===t||"B"===t?loadTrainingScreen(t):"corrida"===t?loadRunningScreen():"outdoor"===t?initializeOutdoorScreen():"sono"===t&&initializeSleepScreen(),"outdoor"!==t&&"sono"!==t?showScreen("trainingScreen"):showScreen(t+"Screen"),void 0}const i=t.target.closest(".checkin-btn");if(i)return void performCheckIn(i.dataset.trainingType);t.target.closest("#prev-month-btn")&&(currentCalendarDate.setMonth(currentCalendarDate.getMonth()-1),renderCalendar()),t.target.closest("#next-month-btn")&&(currentCalendarDate.setMonth(currentCalendarDate.getMonth()+1),renderCalendar());const d=t.target.closest(".outdoor-activity-btn");d&&(currentOutdoorActivity=d.dataset.activity,document.getElementById("outdoor-selection").classList.add("hidden"),document.getElementById("outdoorTracker").classList.remove("hidden")),t.target.closest("#outdoorStartButton")&&startOutdoorTracking(),t.target.closest("#outdoorStopButton")&&stopOutdoorTracking(),t.target.closest("#startSleepBtn")&&startSleepTracking(),t.target.closest("#stopSleepBtn")&&stopSleepTracking()});
-    function initApp(){feather.replace(),loadDatabase();const t=document.getElementById("splashScreen"),e=document.getElementById("appContainer");setTimeout(()=>{t.classList.add("fade-out"),setTimeout(()=>{t.style.display="none",e.style.display="flex",e.classList.remove("hidden"),populateUserSelection(),populateStudentList(),showScreen("loginScreen")},500)},1500)}initApp()
-});
-</script>
-
-</body>
-</html>
+                    <div id="outdoorHistory" class="bg-gray-900 p-4 rounded
