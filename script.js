@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // === BANCO DE DADOS E ESTADO GLOBAL ===
+    // O banco de dados foi reintegrado aqui para garantir que o app sempre carregue.
     let database = {};
     let currentStudentEmail = null;
     let currentCalendarDate = new Date();
@@ -9,27 +10,37 @@ document.addEventListener('DOMContentLoaded', () => {
     let sleepStartTime, sleepTimerInterval, audioContext, microphone, analyser, motionListener;
     let noiseCount = 0, movementCount = 0;
     
-    // Carrega dados do LocalStorage ou de um arquivo JSON
-    async function loadDatabase() {
+    // Carrega dados do LocalStorage ou usa o default
+    function loadDatabase() {
         const storedDb = localStorage.getItem('abfit_database');
         if (storedDb) {
             database = JSON.parse(storedDb);
         } else {
-            try {
-                const response = await fetch('database.json');
-                database = await response.json();
-                
-                // Inicializa estruturas vazias se não existirem
-                database.users.forEach(u => {
-                    if (!database.trainingPlans[u.email]) database.trainingPlans[u.email] = { A:[], B:[], periodizacao:[], attendance:{} };
-                    if (!database.outdoorWorkouts[u.email]) database.outdoorWorkouts[u.email] = [];
-                    if (!database.sleepHistory[u.email]) database.sleepHistory[u.email] = [];
-                });
-                saveDatabase();
-            } catch (error) {
-                console.error("Falha ao carregar o banco de dados inicial.", error);
-                alert("Não foi possível carregar os dados do aplicativo.");
-            }
+            // Usa o banco de dados inicial se não houver nada salvo
+            database = {
+                users: [
+                    { id: 1, name: 'André Brito', email: 'britodeandrade@gmail.com', photo: 'https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/WsTwhcQeE99iAkUHmCmn/pub/3Zy4n6ZmWp9DW98VtXpO.jpeg' },
+                    { id: 2, name: 'Marcelly Bispo', email: 'marcellybispo92@gmail.com', photo: 'https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/WsTwhcQeE99iAkUHmCmn/pub/2VWhNV4eSyDNkwEzPGvq.jpeg' },
+                    { id: 3, name: 'Marcia Brito', email: 'andrademarcia.ucam@gmail.com', photo: 'https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/WsTwhcQeE99iAkUHmCmn/pub/huS3I3wDTHbXGY1EuLjf.jpg' },
+                    { id: 4, name: 'Liliane Torres', email: 'lilicatorres@gmail.com', photo: 'https://i.ibb.co/7j6x0gG/liliane-torres.jpg' }
+                ],
+                trainingPlans: {},
+                userRunningWorkouts: {
+                    'britodeandrade@gmail.com': [{ date: "26/9", method: "FARTLEK", details: "5' AQ + 20' CO alternado entre CA : CO + 5' REC", speed: "8,5 Km/h", pace: "7:00/Km", time: "30 min" },{ date: "27/9", method: "INTERVALADO", details: "5' AQ + (6 BLOCOS) 2' CO : 1'30'' REC + 3' REC", speed: "9,5 Km/h", pace: "6:19/Km", time: "30 min" },{ date: "28/9", method: "LONGÃO", details: "5' AQ + 3 KM DE CO CONTÍNUA + 5' REC", speed: "8,5 Km/h", pace: "7:04/Km", time: "30 min" }],
+                    'marcellybispo92@gmail.com': [{ date: "26/9", method: "FARTLEK", details: "5' AQ + 20' CO alternado entre CA : CO + 5' REC", speed: "7,5 Km/h", pace: "8:00/Km", time: "30 min" },{ date: "27/9", method: "INTERVALADO", details: "5' AQ + (6 BLOCOS) 2' CO : 1'30'' REC + 3' REC", speed: "8,5 Km/h", pace: "7:04/Km", time: "30 min" }],
+                    'andrademarcia.ucam@gmail.com': [{ date: "29/9", method: "FARTLEK", details: "5' CA Fraca + 25' CA Forte : CA Fraca", speed: "5,5 Km/h", pace: "11:00/Km", time: "30 min" },{ date: "30/9", method: "INTERVALADO", details: "5' AQ + (6 BLOCOS) 2' CO : 1'30'' REC + 3' REC", speed: "5,5 Km/h", pace: "11:00/Km", time: "30 min" },{ date: "2/10", method: "LONGÃO", details: "5' CA Fraca + 2 KM DE CA CONTÍNUA + 5' CA Fraca", speed: "5,5 Km/h", pace: "11:00/Km", time: "30 min" }],
+                    'lilicatorres@gmail.com': [{ date: "26/9", method: "FARTLEK", details: "5' CA Fraca + 25' CA Forte : CA Fraca", speed: "5,5 Km/h", pace: "11:00/Km", time: "30 min" },{ date: "27/9", method: "INTERVALADO", details: "3' AQ + (8 BLOCOS) 2' CA Forte : 1' CA Fraca + 2' REC", speed: "5,5 Km/h", pace: "11:00/Km", time: "30 min" }]
+                },
+                outdoorWorkouts: {},
+                sleepHistory: {}
+            };
+            // Inicializa estruturas vazias se não existirem
+            database.users.forEach(u => {
+                if (!database.trainingPlans[u.email]) database.trainingPlans[u.email] = { A:[], B:[], periodizacao:[], attendance:{} };
+                if (!database.outdoorWorkouts[u.email]) database.outdoorWorkouts[u.email] = [];
+                if (!database.sleepHistory[u.email]) database.sleepHistory[u.email] = [];
+            });
+            saveDatabase();
         }
     }
 
@@ -231,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function stopOutdoorTracking() {
         clearInterval(outdoorTimerInterval);
-        navigator.geolocation.clearWatch(outdoorWatchId);
+        if (outdoorWatchId) navigator.geolocation.clearWatch(outdoorWatchId);
         
         const workout = {
             activity: currentOutdoorActivity,
@@ -340,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function stopSleepTracking() {
-        clearInterval(sleepTimerInterval);
+        if (sleepTimerInterval) clearInterval(sleepTimerInterval);
         window.removeEventListener('devicemotion', motionListener);
         if (microphone) microphone.mediaStream.getTracks().forEach(track => track.stop());
         if (audioContext) audioContext.close();
@@ -381,9 +392,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.body.addEventListener("click",t=>{const e=t.target.closest(".user-card");if(e)return populateStudentProfile(e.dataset.userEmail),void showScreen("studentProfileScreen");const n=t.target.closest(".student-card");if(n){const t=database.users.find(t=>t.id==n.dataset.studentId);return void(t&&(populateStudentProfile(t.email),showScreen("studentProfileScreen")))}const o=t.target.closest(".nav-btn, .back-btn");if(o)return void showScreen(o.dataset.target);const a=t.target.closest(".profile-action-btn");if(a){const t=a.dataset.action;return"A"===t||"B"===t?(loadTrainingScreen(t),showScreen("trainingScreen")):"corrida"===t?(loadRunningScreen(),showScreen("trainingScreen")):"outdoor"===t?(initializeOutdoorScreen(),showScreen("outdoorScreen")):"sleep"===t&&(initializeSleepScreen(),showScreen("sleepScreen")),void 0}const i=t.target.closest(".checkin-btn");if(i)return void performCheckIn(i.dataset.trainingType);t.target.closest("#prev-month-btn")&&(currentCalendarDate.setMonth(currentCalendarDate.getMonth()-1),renderCalendar()),t.target.closest("#next-month-btn")&&(currentCalendarDate.setMonth(currentCalendarDate.getMonth()+1),renderCalendar());const d=t.target.closest(".outdoor-activity-btn");d&&(currentOutdoorActivity=d.dataset.activity,document.getElementById("outdoor-selection").classList.add("hidden"),document.getElementById("outdoorTracker").classList.remove("hidden")),t.target.closest("#outdoorStartButton")&&startOutdoorTracking(),t.target.closest("#outdoorStopButton")&&stopOutdoorTracking(),t.target.closest("#startSleepBtn")&&startSleepTracking(),t.target.closest("#stopSleepBtn")&&stopSleepTracking()});
     
-    async function initApp(){
+    function initApp(){
         feather.replace();
-        await loadDatabase();
+        loadDatabase();
         const splash = document.getElementById('splashScreen'), app = document.getElementById('appContainer');
         setTimeout(() => {
             splash.classList.add('fade-out');
