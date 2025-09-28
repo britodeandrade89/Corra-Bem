@@ -1,2 +1,0 @@
-
-Esta estrutura organizada separa claramente as responsabilidades e torna o código mais mantível. O aplicativo agora está completamente modularizado com cada funcionalidade em seu próprio arquivo.
