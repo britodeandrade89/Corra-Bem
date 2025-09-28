@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>AB Fit Outdoor - Assessoria Esportiva</title>
     
+    <!-- CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/feather-icons"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.css">
     
-    <!-- Google Fonts para fonte moderna -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -50,11 +50,20 @@
                 filter: drop-shadow(0 0 20px rgba(239, 68, 68, 0.6));
             }
         }
+        
+        /* Garantir que o app fique escondido inicialmente */
+        #appContainer {
+            display: none !important;
+        }
+        
+        #appContainer.active {
+            display: flex !important;
+        }
     </style>
 </head>
 <body class="overscroll-none">
 
-    <!-- Tela de Splash Modernizada -->
+    <!-- Tela de Splash -->
     <div id="splashScreen" class="w-full h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
         <!-- Efeito de background animado -->
         <div class="absolute inset-0 opacity-20">
@@ -93,18 +102,126 @@
         </div>
     </div>
 
-    <div id="appContainer" class="hidden h-screen flex flex-col max-w-lg mx-auto bg-black">
-        <!-- Restante do código permanece igual -->
-        <!-- ... -->
+    <!-- App Container SIMPLIFICADO para teste -->
+    <div id="appContainer" class="h-screen flex flex-col max-w-lg mx-auto bg-black">
+        <main class="flex-grow relative overflow-hidden">
+            <!-- Tela de Login SIMPLIFICADA -->
+            <div id="loginScreen" class="screen active p-6">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-white mb-2">AB Fit Outdoor</h1>
+                    <p class="text-gray-400">Faça login para continuar</p>
+                </div>
+                
+                <div id="user-selection-container">
+                    <div class="user-card flex items-center p-3 bg-gray-800 rounded-xl border border-gray-700 cursor-pointer hover:bg-gray-700 transition mb-4" data-user-email="britodeandrade@gmail.com">
+                        <img src="https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/WsTwhcQeE99iAkUHmCmn/pub/3Zy4n6ZmWp9DW98VtXpO.jpeg" alt="André Brito" class="w-12 h-12 rounded-full object-cover mr-4">
+                        <div class="flex-grow">
+                            <p class="font-bold text-white">André Brito</p>
+                            <span class="text-sm text-gray-400 font-bold">Avançado • Acessar meu perfil</span>
+                        </div>
+                        <i class="fas fa-sign-in-alt text-red-500"></i>
+                    </div>
+                    
+                    <div class="user-card flex items-center p-3 bg-gray-800 rounded-xl border border-gray-700 cursor-pointer hover:bg-gray-700 transition" data-user-email="marcellybispo92@gmail.com">
+                        <img src="https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/WsTwhcQeE99iAkUHmCmn/pub/2VWhNV4eSyDNkwEzPGvq.jpeg" alt="Marcelly Bispo" class="w-12 h-12 rounded-full object-cover mr-4">
+                        <div class="flex-grow">
+                            <p class="font-bold text-white">Marcelly Bispo</p>
+                            <span class="text-sm text-gray-400 font-bold">Intermediário • Acessar meu perfil</span>
+                        </div>
+                        <i class="fas fa-sign-in-alt text-red-500"></i>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <!-- Scripts -->
+    <!-- Scripts EM ORDEM CORRETA -->
+    <script src="https://unpkg.com/feather-icons"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     
+    <!-- Nossos scripts -->
     <script src="js/database.js"></script>
     <script src="js/sleep-tracker.js"></script>
     <script src="js/outdoor-tracker.js"></script>
     <script src="js/app.js"></script>
+
+    <!-- Script de inicialização SIMPLES -->
+    <script>
+        console.log('🔮 Iniciando AB Fit Outdoor...');
+        
+        // Esperar o DOM carregar completamente
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ DOM carregado');
+            
+            const splashScreen = document.getElementById('splashScreen');
+            const appContainer = document.getElementById('appContainer');
+            
+            if (!splashScreen || !appContainer) {
+                console.error('❌ Elementos não encontrados');
+                return;
+            }
+            
+            console.log('🎯 Elementos encontrados, aguardando...');
+            
+            // Simples transição após 3 segundos
+            setTimeout(function() {
+                console.log('🔄 Mostrando aplicação...');
+                splashScreen.style.display = 'none';
+                appContainer.style.display = 'flex';
+                
+                // Inicializar Feather Icons
+                if (typeof feather !== 'undefined') {
+                    feather.replace();
+                    console.log('✅ Feather Icons inicializado');
+                }
+                
+                console.log('🚀 Aplicação carregada!');
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Debug AB Fit Outdoor</title>
+</head>
+<body>
+    <h1>Debug AB Fit Outdoor</h1>
+    <div id="logs"></div>
+    
+    <script>
+        function log(message) {
+            const logs = document.getElementById('logs');
+            logs.innerHTML += `<p>${message}</p>`;
+            console.log(message);
+        }
+        
+        log('🔍 Iniciando verificação...');
+        
+        // Testar se scripts estão carregando
+        const scripts = [
+            'js/database.js',
+            'js/sleep-tracker.js', 
+            'js/outdoor-tracker.js',
+            'js/app.js'
+        ];
+        
+        scripts.forEach(script => {
+            fetch(script)
+                .then(response => {
+                    if (response.ok) {
+                        log(`✅ ${script} - CARREGADO`);
+                    } else {
+                        log(`❌ ${script} - NÃO ENCONTRADO`);
+                    }
+                })
+                .catch(error => {
+                    log(`❌ ${script} - ERRO: ${error}`);
+                });
+        });
+    </script>
 </body>
 </html>
