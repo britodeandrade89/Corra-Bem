@@ -1,47 +1,34 @@
-/* styles/main.css - Adicione ao final do arquivo */
+/* Estilos para o monitor de sono estilo Samsung Health */
+.sleep-score-excellent { color: #10b981; }
+.sleep-score-good { color: #3b82f6; }
+.sleep-score-fair { color: #f59e0b; }
+.sleep-score-poor { color: #ef4444; }
 
-/* Animações suaves para a transição da splash */
-#splashScreen {
-    transition: opacity 0.8s ease-in-out;
+.gradient-card {
+    background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%);
+    border: 1px solid #3730a3;
 }
 
-#splashScreen.fade-out {
-    opacity: 0;
-    pointer-events: none;
+.metric-bar {
+    transition: all 0.3s ease;
 }
 
-/* Garantir que o app container fique escondido inicialmente */
-#appContainer.hidden {
-    display: none !important;
+.sleep-history-item {
+    transition: all 0.2s ease;
 }
 
-#appContainer {
-    transition: opacity 0.5s ease-in-out;
+.sleep-history-item:hover {
+    transform: translateY(-2px);
+    border-color: #3b82f6;
 }
 
-/* Melhorar a aparência dos textos gradientes */
-.splash-title, .splash-subtitle {
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+/* Animações para o monitoramento ativo */
+@keyframes pulse-sleep {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
 }
 
-/* Efeito de brilho pulsante */
-@keyframes pulse-glow {
-    0% {
-        filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.4));
-        transform: scale(1);
-    }
-    50% {
-        filter: drop-shadow(0 0 20px rgba(239, 68, 68, 0.8));
-        transform: scale(1.02);
-    }
-    100% {
-        filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.4));
-        transform: scale(1);
-    }
-}
-
-.pulse-glow {
-    animation: pulse-glow 3s ease-in-out infinite;
+.sleep-monitoring-active {
+    animation: pulse-sleep 2s ease-in-out infinite;
 }
