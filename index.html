@@ -2,226 +2,938 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>AB Fit Outdoor - Assessoria Esportiva</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AB Fit - Assessoria</title>
     
-    <!-- CSS -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.css">
     
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/sleep-tracker.css">
-
     <style>
-        .splash-title {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            letter-spacing: -0.02em;
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #000; 
+            margin: 0;
+            padding: 0;
         }
         
-        .splash-subtitle {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            overflow-y: auto;
+            background-color: #000;
+        }
+        .screen.active { display: block; }
+
+        #splashScreen.fade-out { opacity: 0; transition: opacity 0.5s ease-in-out; }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #374151;
+        }
+        .calendar-day:hover { transform: scale(1.05); }
+        .calendar-day.treino-A { background-color: #3b82f6; color: white; }
+        .calendar-day.treino-B { background-color: #10b981; color: white; }
+        .calendar-day.treino-F { background-color: #f59e0b; color: white; }
+        .calendar-day.has-treino { border: 2px solid; }
+        .calendar-day.empty { background-color: transparent; cursor: default; }
+        .calendar-day.today { border: 2px solid #ef4444; background-color: #1f2937; }
+
+        .checkin-done {
+            background-color: #10b981 !important;
         }
         
-        .pulse-glow {
-            animation: pulse-glow 2s ease-in-out infinite alternate;
+        /* Estilos para a plataforma de evolução */
+        .evolution-container {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         
-        @keyframes pulse-glow {
-            from {
-                filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.3));
-            }
-            to {
-                filter: drop-shadow(0 0 20px rgba(239, 68, 68, 0.6));
-            }
+        .evolution-header {
+            text-align: center;
+            margin-bottom: 20px;
         }
         
-        /* Garantir que o app fique escondido inicialmente */
-        #appContainer {
-            display: none !important;
+        .evolution-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 5px;
         }
         
-        #appContainer.active {
-            display: flex !important;
+        .evolution-subtitle {
+            font-size: 14px;
+            color: #aaa;
+        }
+        
+        .evolution-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 5px;
+        }
+        
+        .evolution-progress {
+            margin-bottom: 20px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50 0%, #8BC34A 100%);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #aaa;
+        }
+        
+        .evolution-history {
+            margin-top: 20px;
+        }
+        
+        .history-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        .history-date {
+            font-size: 12px;
+            color: #aaa;
+        }
+        
+        .history-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
         }
     </style>
 </head>
-<body class="overscroll-none">
+<body class="overscroll-none bg-black">
 
-    <!-- Tela de Splash -->
-    <div id="splashScreen" class="w-full h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
-        <!-- Efeito de background animado -->
-        <div class="absolute inset-0 opacity-20">
-            <div class="absolute top-1/4 left-1/4 w-32 h-32 bg-red-500 rounded-full blur-3xl animate-pulse"></div>
-            <div class="absolute bottom-1/4 right-1/4 w-40 h-40 bg-blue-500 rounded-full blur-3xl animate-pulse delay-1000"></div>
-            <div class="absolute top-1/2 right-1/3 w-28 h-28 bg-green-500 rounded-full blur-3xl animate-pulse delay-500"></div>
-        </div>
-        
-        <div class="relative z-10 text-center px-6">
-            <!-- Título Principal -->
-            <h1 class="splash-title text-6xl md:text-7xl font-black mb-4 leading-tight pulse-glow">
-                AB<span class="text-red-500" style="-webkit-text-fill-color: #ef4444;">FIT</span>
-            </h1>
-            
-            <!-- Subtítulo -->
-            <h2 class="splash-subtitle text-2xl md:text-3xl font-semibold mb-8 tracking-wider">
-                OUTDOOR
-            </h2>
-            
-            <!-- Tagline -->
-            <p class="text-gray-400 text-lg font-medium mb-12 max-w-md mx-auto leading-relaxed">
-                Sua jornada fitness começa aqui
-            </p>
-            
-            <!-- Loading Indicator -->
-            <div class="flex justify-center items-center space-x-2">
-                <div class="w-2 h-2 bg-red-500 rounded-full animate-bounce"></div>
-                <div class="w-2 h-2 bg-red-500 rounded-full animate-bounce delay-100"></div>
-                <div class="w-2 h-2 bg-red-500 rounded-full animate-bounce delay-200"></div>
-            </div>
-        </div>
-        
-        <!-- Versão -->
-        <div class="absolute bottom-8 left-0 right-0 text-center">
-            <p class="text-gray-600 text-sm font-medium">v2.0.0</p>
-        </div>
+    <!-- SPLASH SCREEN -->
+    <div id="splashScreen" class="w-full h-screen flex flex-col items-center justify-center bg-black">
+        <img src="https://i.ibb.co/P9T5YQJ/logo-ab-fit-512.png" alt="Logo AB Fit" class="w-40 h-40">
+        <h1 class="text-4xl font-bold text-white mt-4">AB<span class="text-red-500">FIT</span></h1>
     </div>
 
-    <!-- App Container SIMPLIFICADO para teste -->
-    <div id="appContainer" class="h-screen flex flex-col max-w-lg mx-auto bg-black">
-        <main class="flex-grow relative overflow-hidden">
-            <!-- Tela de Login SIMPLIFICADA -->
+    <!-- APP CONTAINER -->
+    <div id="appContainer" class="hidden h-screen flex flex-col max-w-lg mx-auto bg-black">
+        <main class="flex-grow overflow-y-auto">
+
+            <!-- TELA LOGIN -->
             <div id="loginScreen" class="screen active p-6">
-                <div class="text-center mb-8">
-                    <h1 class="text-3xl font-bold text-white mb-2">AB Fit Outdoor</h1>
-                    <p class="text-gray-400">Faça login para continuar</p>
+                <header class="text-center pt-6 pb-8">
+                   <img src="https://i.ibb.co/P9T5YQJ/logo-ab-fit-512.png" alt="Logo AB Fit" class="w-24 h-24 mx-auto">
+                </header>
+                <h1 class="text-3xl font-extrabold text-white mb-4 text-center">AB<span class="text-red-500">FIT</span></h1>
+                <div class="bg-red-600 text-white p-4 rounded-xl mb-6 shadow-lg shadow-red-500/20">
+                    <div class="flex items-center mb-1">
+                        <i data-feather="lock" class="w-5 h-5 mr-2"></i>
+                        <h3 class="font-bold text-lg">🔐 Acesse Seu Perfil</h3>
+                    </div>
+                    <p class="text-sm">Selecione seu perfil para continuar</p>
                 </div>
+                <div id="user-selection-container" class="space-y-3"></div>
+            </div>
+
+            <!-- TELA ALUNOS -->
+            <div id="studentListScreen" class="screen p-6">
+                <header class="flex items-center justify-between pt-6 pb-4">
+                    <button class="back-btn p-2 rounded-full hover:bg-gray-800" data-target="loginScreen">
+                        <i data-feather="arrow-left" class="text-gray-300"></i>
+                    </button>
+                    <img src="https://i.ibb.co/P9T5YQJ/logo-ab-fit-512.png" alt="Logo AB Fit" class="w-16 h-16">
+                    <div class="w-10"></div>
+                </header>
+                <h1 class="text-3xl font-extrabold text-white mb-4">Alunos da Assessoria</h1>
+                <div class="bg-blue-600 text-white p-4 rounded-xl mb-6 shadow-lg shadow-blue-500/20">
+                    <div class="flex items-center mb-1">
+                        <i data-feather="users" class="w-5 h-5 mr-2"></i>
+                        <h3 class="font-bold text-lg">👥 Nossa Equipe</h3>
+                    </div>
+                    <p class="text-sm">Conheça os alunos da assessoria</p>
+                </div>
+                <div id="student-list-container" class="space-y-3"></div>
+            </div>
+
+            <!-- TELA PERFIL -->
+            <div id="studentProfileScreen" class="screen p-6">
+                <header class="flex items-center justify-between pt-6 pb-4">
+                    <button class="back-btn p-2 rounded-full hover:bg-gray-800" data-target="studentListScreen">
+                        <i data-feather="arrow-left" class="text-gray-300"></i>
+                    </button>
+                    <img src="https://i.ibb.co/P9T5YQJ/logo-ab-fit-512.png" alt="Logo AB Fit" class="w-16 h-16">
+                    <div class="w-10"></div>
+                </header>
+                <h1 class="text-3xl font-extrabold text-white mb-4 text-center">PERFIL DO ALUNO</h1>
+                <div id="student-profile-info" class="flex items-center p-4 bg-gray-800 border border-gray-700 rounded-xl mb-6"></div>
                 
-                <div id="user-selection-container">
-                    <div class="user-card flex items-center p-3 bg-gray-800 rounded-xl border border-gray-700 cursor-pointer hover:bg-gray-700 transition mb-4" data-user-email="britodeandrade@gmail.com">
-                        <img src="https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/WsTwhcQeE99iAkUHmCmn/pub/3Zy4n6ZmWp9DW98VtXpO.jpeg" alt="André Brito" class="w-12 h-12 rounded-full object-cover mr-4">
-                        <div class="flex-grow">
-                            <p class="font-bold text-white">André Brito</p>
-                            <span class="text-sm text-gray-400 font-bold">Avançado • Acessar meu perfil</span>
-                        </div>
-                        <i class="fas fa-sign-in-alt text-red-500"></i>
+                <div id="student-profile-buttons" class="grid grid-cols-2 gap-4 mb-6"></div>
+                
+                <!-- PLATAFORMA DE EVOLUÇÃO ADICIONADA AQUI -->
+                <div id="evolution-platform" class="evolution-container">
+                    <div class="evolution-header">
+                        <div class="evolution-title">Minha Evolução</div>
+                        <div class="evolution-subtitle">Acompanhe seu progresso</div>
                     </div>
                     
-                    <div class="user-card flex items-center p-3 bg-gray-800 rounded-xl border border-gray-700 cursor-pointer hover:bg-gray-700 transition" data-user-email="marcellybispo92@gmail.com">
-                        <img src="https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/WsTwhcQeE99iAkUHmCmn/pub/2VWhNV4eSyDNkwEzPGvq.jpeg" alt="Marcelly Bispo" class="w-12 h-12 rounded-full object-cover mr-4">
-                        <div class="flex-grow">
-                            <p class="font-bold text-white">Marcelly Bispo</p>
-                            <span class="text-sm text-gray-400 font-bold">Intermediário • Acessar meu perfil</span>
+                    <div class="evolution-stats">
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-workouts">0</div>
+                            <div class="stat-label">Treinos Realizados</div>
                         </div>
-                        <i class="fas fa-sign-in-alt text-red-500"></i>
+                        <div class="stat-card">
+                            <div class="stat-value" id="current-streak">0</div>
+                            <div class="stat-label">Dias Consecutivos</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-distance">0 km</div>
+                            <div class="stat-label">Distância Total</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="completion-rate">0%</div>
+                            <div class="stat-label">Taxa de Conclusão</div>
+                        </div>
+                    </div>
+                    
+                    <div class="evolution-progress">
+                        <div class="progress-label">
+                            <span>Progresso Mensal</span>
+                            <span id="month-progress">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="month-progress-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="evolution-history">
+                        <div class="history-title">Histórico Recente</div>
+                        <div id="recent-history"></div>
                     </div>
                 </div>
+                
+                <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
+                    <div id="calendar-header" class="flex justify-between items-center mb-4">
+                        <button id="prev-month-btn" class="p-2 rounded-full hover:bg-gray-700">
+                            <i data-feather="chevron-left" class="text-gray-300"></i>
+                        </button>
+                        <h2 id="calendar-month-year" class="font-bold text-lg text-white">Setembro 2025</h2>
+                        <button id="next-month-btn" class="p-2 rounded-full hover:bg-gray-700">
+                            <i data-feather="chevron-right" class="text-gray-300"></i>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-7 gap-1 text-center text-xs text-gray-400 mb-2">
+                        <div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div>
+                    </div>
+                    <div id="calendar-grid" class="grid grid-cols-7 gap-1 text-center text-sm"></div>
+                </div>
             </div>
+
+            <!-- TELA TREINO -->
+            <div id="trainingScreen" class="screen p-6">
+                <header class="flex items-center justify-between pt-6 pb-4">
+                    <button class="back-btn p-2 rounded-full hover:bg-gray-800" data-target="studentProfileScreen">
+                        <i data-feather="arrow-left" class="text-gray-300"></i>
+                    </button>
+                    <h1 id="training-title" class="text-2xl font-bold text-white">Treino</h1>
+                    <div class="w-10"></div>
+                </header>
+                <div id="training-content-wrapper" class="space-y-3 pb-24"></div>
+            </div>
+
         </main>
+
+        <!-- NAVEGAÇÃO INFERIOR -->
+        <footer id="bottom-nav" class="flex-shrink-0 bg-gray-800 border-t border-gray-700">
+            <div class="flex justify-around items-center h-20">
+                <button class="nav-btn text-red-500 flex flex-col items-center space-y-1" data-target="studentListScreen">
+                    <i data-feather="users"></i>
+                    <span class="text-xs font-semibold">ALUNOS</span>
+                </button>
+                <button class="nav-btn text-gray-400 hover:text-white flex flex-col items-center space-y-1" data-target="studentProfileScreen">
+                    <i data-feather="user"></i>
+                    <span class="text-xs font-semibold">PERFIL</span>
+                </button>
+            </div>
+        </footer>
     </div>
 
-    <!-- Scripts EM ORDEM CORRETA -->
-    <script src="https://unpkg.com/feather-icons"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    
-    <!-- Nossos scripts -->
-    <script src="js/database.js"></script>
-    <script src="js/sleep-tracker.js"></script>
-    <script src="js/outdoor-tracker.js"></script>
-    <script src="js/app.js"></script>
-
-    <!-- Script de inicialização SIMPLES -->
-    <script>
-        console.log('🔮 Iniciando AB Fit Outdoor...');
-        
-        // Esperar o DOM carregar completamente
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('✅ DOM carregado');
-            
-            const splashScreen = document.getElementById('splashScreen');
-            const appContainer = document.getElementById('appContainer');
-            
-            if (!splashScreen || !appContainer) {
-                console.error('❌ Elementos não encontrados');
-                return;
+<script>
+    // === BANCO DE DADOS CORRIGIDO ===
+    const database = {
+        users: [
+            { 
+                id: 1, 
+                name: 'André Brito', 
+                email: 'britodeandrade@gmail.com', 
+                photo: 'https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/WsTwhcQeE99iAkUHmCmn/pub/3Zy4n6ZmWp9DW98VtXpO.jpeg' 
+            },
+            { 
+                id: 2, 
+                name: 'Marcelly Bispo', 
+                email: 'marcellybispo92@gmail.com', 
+                photo: 'https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/WsTwhcQeE99iAkUHmCmn/pub/2VWhNV4eSyDNkwEzPGvq.jpeg' 
+            },
+            { 
+                id: 3, 
+                name: 'Marcia Brito', 
+                email: 'andrademarcia.ucam@gmail.com', 
+                photo: 'https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/WsTwhcQeE99iAkUHmCmn/pub/huS3I3wDTHbXGY1EuLjf.jpg' 
+            },
+            { 
+                id: 4, 
+                name: 'Liliane Torres', 
+                email: 'lilicatorres@gmail.com', 
+                photo: 'https://i.ibb.co/7j6x0gG/liliane-torres.jpg' 
             }
-            
-            console.log('🎯 Elementos encontrados, aguardando...');
-            
-            // Simples transição após 3 segundos
-            setTimeout(function() {
-                console.log('🔄 Mostrando aplicação...');
-                splashScreen.style.display = 'none';
-                appContainer.style.display = 'flex';
-                
-                // Inicializar Feather Icons
-                if (typeof feather !== 'undefined') {
-                    feather.replace();
-                    console.log('✅ Feather Icons inicializado');
-                }
-                
-                console.log('🚀 Aplicação carregada!');
-            }, 3000);
+        ],
+        
+        trainingPlans: {
+            'britodeandrade@gmail.com': {
+                'A': [
+                    { id: 1, name: 'Supino Reto', series: '4x10', carga: 70, img: 'https://via.placeholder.com/80x80/3b82f6/ffffff?text=SR', history: [] },
+                    { id: 2, name: 'Agachamento Livre', series: '4x12', carga: 100, img: 'https://via.placeholder.com/80x80/10b981/ffffff?text=AL', history: [] },
+                    { id: 3, name: 'Remada Curvada', series: '3x10', carga: 60, img: 'https://via.placeholder.com/80x80/f59e0b/ffffff?text=RC', history: [] },
+                    { id: 4, name: 'Desenvolvimento', series: '3x12', carga: 40, img: 'https://via.placeholder.com/80x80/ef4444/ffffff?text=DV', history: [] }
+                ],
+                'B': [
+                    { id: 1, name: 'Levantamento Terra', series: '4x8', carga: 120, img: 'https://via.placeholder.com/80x80/8b5cf6/ffffff?text=LT', history: [] },
+                    { id: 2, name: 'Rosca Direta', series: '3x12', carga: 25, img: 'https://via.placeholder.com/80x80/06b6d4/ffffff?text=RD', history: [] },
+                    { id: 3, name: 'Tríceps Testa', series: '3x15', carga: 30, img: 'https://via.placeholder.com/80x80/84cc16/ffffff?text=TT', history: [] },
+                    { id: 4, name: 'Elevação Lateral', series: '3x15', carga: 12, img: 'https://via.placeholder.com/80x80/f97316/ffffff?text=EL', history: [] }
+                ],
+                'periodizacao': [
+                    { week: "1ª e 2ª", phase: "Adaptação/Hipertrofia", methods: 'Método de execução Simples', reps: '10-12', volume: '16 séries/grupo', intensity: '70-75% 1RM', recovery: '60-90s' },
+                    { week: "3ª e 4ª", phase: "Hipertrofia", methods: 'Bi-Set', reps: '8-10', volume: '18 séries/grupo', intensity: '75-80% 1RM', recovery: '45-60s' }
+                ],
+                'attendance': {}
+            },
+            'marcellybispo92@gmail.com': {
+                'A': [
+                    { id: 1, name: 'Leg Press', series: '4x15', carga: 80, img: 'https://via.placeholder.com/80x80/3b82f6/ffffff?text=LP', history: [] },
+                    { id: 2, name: 'Cadeira Extensora', series: '3x15', carga: 40, img: 'https://via.placeholder.com/80x80/10b981/ffffff?text=CE', history: [] },
+                    { id: 3, name: 'Cadeira Flexora', series: '3x12', carga: 35, img: 'https://via.placeholder.com/80x80/f59e0b/ffffff?text=CF', history: [] },
+                    { id: 4, name: 'Panturrilha Sentado', series: '4x20', carga: 50, img: 'https://via.placeholder.com/80x80/ef4444/ffffff?text=PS', history: [] }
+                ],
+                'B': [
+                    { id: 1, name: 'Puxada Alta', series: '4x12', carga: 45, img: 'https://via.placeholder.com/80x80/8b5cf6/ffffff?text=PA', history: [] },
+                    { id: 2, name: 'Remada Baixa', series: '3x12', carga: 50, img: 'https://via.placeholder.com/80x80/06b6d4/ffffff?text=RB', history: [] },
+                    { id: 3, name: 'Rosca Scott', series: '3x15', carga: 15, img: 'https://via.placeholder.com/80x80/84cc16/ffffff?text=RS', history: [] },
+                    { id: 4, name: 'Tríceps Pulley', series: '3x15', carga: 20, img: 'https://via.placeholder.com/80x80/f97316/ffffff?text=TP', history: [] }
+                ],
+                'periodizacao': [
+                    { week: "1ª e 2ª", phase: "Adaptação", methods: 'Execução Controlada', reps: '12-15', volume: '12 séries/grupo', intensity: '60-65% 1RM', recovery: '90s' }
+                ],
+                'attendance': {}
+            }
+        },
+
+        // TREINOS DE CORRIDA CORRIGIDOS (baseado no CSV)
+        userRunningWorkouts: {
+            'britodeandrade@gmail.com': [
+                { method: 'FARTLEK', details: "5' AQ + 20' CO alternado entre CA : CO + 5' REC", speed: '8,5 Km/h', pace: '7:00/Km', time: '30 min', fcAlvo: '80%', fcMax: '184 BPM', fcTreino: '147,2 BPM' },
+                { method: 'INTERVALADO', details: "5' AQ + (6 BLOCOS) 2' CO : 1'30'' REC + 3' REC", speed: '9,5 Km/h', pace: '6:19/Km', time: '30 min', fcAlvo: '85%', fcMax: '184 BPM', fcTreino: '156,4 BPM' },
+                { method: 'LONGÃO', details: "5' AQ + 3 KM DE CO CONTÍNUA + 5' REC", speed: '8,5 Km/h', pace: '7:04/Km', time: '30 min', fcAlvo: '80%', fcMax: '184 BPM', fcTreino: '147,2 BPM' },
+                { method: 'RITMO', details: "5' AQ + (4 BLOCOS) 500 metros CO : 2'30'' REC + 3' REC", speed: '11 Km/h', pace: '5:27/Km', time: '26,3 min', fcAlvo: '90%', fcMax: '184 BPM', fcTreino: '165,6 BPM' },
+                { method: 'TIROS', details: "5' AQ + (8 TIROS) 200 metros CO : 2'30 REC + 3' REC", speed: '15 Km/h', pace: '4:00/Km', time: '32 min', fcAlvo: '95%', fcMax: '184 BPM', fcTreino: '174,8 BPM' }
+            ],
+            'marcellybispo92@gmail.com': [
+                { method: 'FARTLEK', details: "5' AQ + 20' CO alternado entre CA : CO + 5' REC", speed: '7,5 Km/h', pace: '8:00/Km', time: '30 min', fcAlvo: '80%', fcMax: '187 BPM', fcTreino: '149,6 BPM' },
+                { method: 'INTERVALADO', details: "5' AQ + (6 BLOCOS) 2' CO : 1'30'' REC + 3' REC", speed: '8,5 Km/h', pace: '7:04/Km', time: '30 min', fcAlvo: '85%', fcMax: '187 BPM', fcTreino: '158,95 BPM' },
+                { method: 'LONGÃO', details: "5' AQ + 3 KM DE CO CONTÍNUA + 5' REC", speed: '8 Km/h', pace: '7:30/Km', time: '30 min', fcAlvo: '80%', fcMax: '187 BPM', fcTreino: '149,6 BPM' },
+                { method: 'RITMO', details: "5' AQ + (4 BLOCOS) 500 metros CO : 2'30'' REC + 3' REC", speed: '9,5 Km/h', pace: '6:19/Km', time: '26,3 min', fcAlvo: '90%', fcMax: '187 BPM', fcTreino: '168,3 BPM' },
+                { method: 'TIROS', details: "5' AQ + (8 TIROS) 200 metros CO : 2'30 REC + 3' REC", speed: '12 Km/h', pace: '5:00/Km', time: '32 min', fcAlvo: '95%', fcMax: '187 BPM', fcTreino: '177,65 BPM' }
+            ]
+        },
+
+        outdoorWorkouts: {}
+    };
+
+    // === VARIÁVEIS GLOBAIS ===
+    let currentStudentId = null;
+    let currentStudentEmail = null;
+    let currentTrainingType = null;
+    let currentCalendarDate = new Date();
+
+    // === FUNÇÕES PRINCIPAIS ===
+    function showScreen(targetId) {
+        const targetScreen = document.getElementById(targetId);
+        if (!targetScreen) return;
+        
+        // Esconde todas as telas
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.remove('active');
         });
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Debug AB Fit Outdoor</title>
-</head>
-<body>
-    <h1>Debug AB Fit Outdoor</h1>
-    <div id="logs"></div>
+        
+        // Mostra a tela alvo
+        targetScreen.classList.add('active');
+        
+        // Se for a tela de perfil, atualiza a plataforma de evolução
+        if (targetId === 'studentProfileScreen') {
+            updateEvolutionPlatform();
+        }
+    }
+
+    function populateUserSelection() {
+        const container = document.getElementById('user-selection-container');
+        container.innerHTML = database.users.map(user => `
+            <div class="user-card flex items-center p-3 bg-gray-800 rounded-xl border border-gray-700 cursor-pointer hover:bg-gray-700 transition" data-user-email="${user.email}">
+                <img src="${user.photo}" alt="${user.name}" class="w-12 h-12 rounded-full object-cover mr-4">
+                <div class="flex-grow">
+                    <p class="font-semibold text-white">${user.name}</p>
+                    <span class="text-sm text-gray-400">Acessar meu perfil</span>
+                </div>
+                <i data-feather="log-in" class="text-red-500"></i>
+            </div>
+        `).join('');
+        feather.replace();
+    }
+
+    function populateStudentList() {
+        const container = document.getElementById('student-list-container');
+        container.innerHTML = database.users.map(student => `
+            <div class="student-card flex items-center p-3 bg-gray-800 rounded-xl border border-gray-700 cursor-pointer hover:bg-gray-700 transition" data-student-id="${student.id}">
+                <img src="${student.photo}" alt="${student.name}" class="w-12 h-12 rounded-full object-cover mr-4">
+                <div class="flex-grow">
+                    <p class="font-semibold text-white">${student.name}</p>
+                    <span class="text-sm text-gray-400">Ver perfil completo</span>
+                </div>
+                <i data-feather="user" class="text-blue-500"></i>
+            </div>
+        `).join('');
+        feather.replace();
+    }
+
+    function populateStudentProfile(studentId) {
+        currentStudentId = studentId;
+        const student = database.users.find(s => s.id == studentId);
+        if (!student) return;
+        
+        currentStudentEmail = student.email;
+        
+        const infoContainer = document.getElementById('student-profile-info');
+        infoContainer.innerHTML = `
+            <img src="${student.photo}" alt="${student.name}" class="w-14 h-14 rounded-full object-cover mr-4">
+            <div>
+                <h2 class="text-xl font-bold text-white">${student.name}</h2>
+                <p class="text-gray-400 text-sm">${student.email}</p>
+            </div>
+        `;
+
+        const buttonsContainer = document.getElementById('student-profile-buttons');
+        buttonsContainer.innerHTML = `
+            <button class="profile-action-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition shadow-lg" data-action="A">
+                <i data-feather="star"></i><span class="text-xs">TREINO A</span>
+            </button>
+            <button class="profile-action-btn bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition shadow-lg" data-action="B">
+                <i data-feather="zap"></i><span class="text-xs">TREINO B</span>
+            </button>
+            <button class="profile-action-btn bg-purple-500 hover:bg-purple-600 text-white font-bold py-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition shadow-lg" data-action="corrida">
+                <i data-feather="trending-up"></i><span class="text-xs">CORRIDA</span>
+            </button>
+            <button class="profile-action-btn bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition shadow-lg" data-action="periodizacao">
+                <i data-feather="calendar"></i><span class="text-xs">PERIODIZAÇÃO</span>
+            </button>
+        `;
+        
+        feather.replace();
+        renderCalendar();
+        updateEvolutionPlatform();
+    }
+
+    // === PLATAFORMA DE EVOLUÇÃO ===
+    function updateEvolutionPlatform() {
+        if (!currentStudentEmail) return;
+        
+        const attendance = database.trainingPlans[currentStudentEmail]?.attendance || {};
+        const outdoorWorkouts = database.outdoorWorkouts[currentStudentEmail] || [];
+        
+        // Calcular estatísticas
+        const totalWorkouts = Object.keys(attendance).length + outdoorWorkouts.length;
+        const currentStreak = calculateCurrentStreak(attendance, outdoorWorkouts);
+        const totalDistance = calculateTotalDistance(outdoorWorkouts);
+        const completionRate = calculateCompletionRate(attendance, outdoorWorkouts);
+        const monthProgress = calculateMonthProgress(attendance, outdoorWorkouts);
+        
+        // Atualizar a interface
+        document.getElementById('total-workouts').textContent = totalWorkouts;
+        document.getElementById('current-streak').textContent = currentStreak;
+        document.getElementById('total-distance').textContent = totalDistance.toFixed(1) + ' km';
+        document.getElementById('completion-rate').textContent = completionRate + '%';
+        document.getElementById('month-progress').textContent = monthProgress + '%';
+        document.getElementById('month-progress-bar').style.width = monthProgress + '%';
+        
+        // Atualizar histórico recente
+        updateRecentHistory(attendance, outdoorWorkouts);
+    }
     
-    <script>
-        function log(message) {
-            const logs = document.getElementById('logs');
-            logs.innerHTML += `<p>${message}</p>`;
-            console.log(message);
+    function calculateCurrentStreak(attendance, outdoorWorkouts) {
+        // Implementar lógica para calcular dias consecutivos
+        // Por enquanto, retornar um valor simulado
+        return Math.min(Object.keys(attendance).length, 7);
+    }
+    
+    function calculateTotalDistance(outdoorWorkouts) {
+        return outdoorWorkouts.reduce((total, workout) => total + (workout.distance || 0), 0);
+    }
+    
+    function calculateCompletionRate(attendance, outdoorWorkouts) {
+        // Implementar lógica para calcular taxa de conclusão
+        // Por enquanto, retornar um valor simulado
+        const totalPossible = 30; // Supondo 30 treinos possíveis no mês
+        const completed = Object.keys(attendance).length + outdoorWorkouts.length;
+        return Math.round((completed / totalPossible) * 100);
+    }
+    
+    function calculateMonthProgress(attendance, outdoorWorkouts) {
+        // Implementar lógica para calcular progresso mensal
+        // Por enquanto, retornar um valor simulado
+        const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+        const today = new Date().getDate();
+        return Math.round((today / daysInMonth) * 100);
+    }
+    
+    function updateRecentHistory(attendance, outdoorWorkouts) {
+        const historyContainer = document.getElementById('recent-history');
+        
+        // Combinar todos os treinos
+        const allWorkouts = [];
+        
+        // Adicionar treinos de musculação
+        Object.keys(attendance).forEach(date => {
+            allWorkouts.push({
+                date: date,
+                type: attendance[date].type,
+                subtype: attendance[date].subtype
+            });
+        });
+        
+        // Adicionar treinos outdoor
+        outdoorWorkouts.forEach(workout => {
+            allWorkouts.push({
+                date: workout.date,
+                type: 'outdoor',
+                subtype: workout.activity
+            });
+        });
+        
+        // Ordenar por data (mais recente primeiro)
+        allWorkouts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        // Mostrar apenas os 5 mais recentes
+        const recentWorkouts = allWorkouts.slice(0, 5);
+        
+        if (recentWorkouts.length === 0) {
+            historyContainer.innerHTML = '<p class="text-gray-400 text-center">Nenhum treino recente</p>';
+            return;
         }
         
-        log('🔍 Iniciando verificação...');
+        historyContainer.innerHTML = recentWorkouts.map(workout => `
+            <div class="history-item">
+                <div class="history-date">${formatDate(workout.date)}</div>
+                <div class="history-value">${workout.type}${workout.subtype ? ' - ' + workout.subtype : ''}</div>
+            </div>
+        `).join('');
+    }
+    
+    function formatDate(dateString) {
+        const options = { day: '2-digit', month: '2-digit' };
+        return new Date(dateString).toLocaleDateString('pt-BR', options);
+    }
+
+    // === SISTEMA DE TREINOS ===
+    function loadTrainingScreen(trainingType) {
+        currentTrainingType = trainingType;
+        const trainingPlan = database.trainingPlans[currentStudentEmail]?.[trainingType] || [];
         
-        // Testar se scripts estão carregando
-        const scripts = [
-            'js/database.js',
-            'js/sleep-tracker.js', 
-            'js/outdoor-tracker.js',
-            'js/app.js'
-        ];
+        const title = document.getElementById('training-title');
+        const content = document.getElementById('training-content-wrapper');
         
-        scripts.forEach(script => {
-            fetch(script)
-                .then(response => {
-                    if (response.ok) {
-                        log(`✅ ${script} - CARREGADO`);
-                    } else {
-                        log(`❌ ${script} - NÃO ENCONTRADO`);
-                    }
-                })
-                .catch(error => {
-                    log(`❌ ${script} - ERRO: ${error}`);
-                });
+        title.textContent = `Treino ${trainingType}`;
+        content.innerHTML = '';
+
+        if (trainingPlan.length === 0) {
+            content.innerHTML = `
+                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 text-center">
+                    <i data-feather="frown" class="w-16 h-16 text-gray-400 mx-auto mb-4"></i>
+                    <h3 class="text-xl font-bold text-white mb-2">Nenhum treino cadastrado</h3>
+                    <p class="text-gray-400">Entre em contato com o professor para definir seu treino.</p>
+                </div>
+            `;
+            feather.replace();
+            return;
+        }
+
+        trainingPlan.forEach((exercise) => {
+            const exerciseCard = document.createElement('div');
+            exerciseCard.className = 'bg-gray-800 p-4 rounded-xl border border-gray-700';
+            exerciseCard.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center flex-1">
+                        <img src="${exercise.img}" alt="${exercise.name}" class="w-16 h-16 rounded-lg object-cover mr-4">
+                        <div class="flex-1">
+                            <h3 class="font-bold text-white text-lg">${exercise.name}</h3>
+                            <p class="text-gray-300 text-sm">${exercise.series}</p>
+                            <div class="flex items-center mt-2">
+                                <input type="number" 
+                                       value="${exercise.carga || ''}" 
+                                       class="carga-input w-20 bg-gray-700 text-white border border-gray-600 rounded-lg py-1 px-2 mr-2" 
+                                       placeholder="Carga"
+                                       data-exercise-id="${exercise.id}">
+                                <span class="text-gray-300 text-sm">kg</span>
+                                <button class="save-carga-btn ml-4 bg-blue-600 hover:bg-blue-700 text-white text-xs py-1 px-3 rounded-lg transition-colors" data-exercise-id="${exercise.id}">
+                                    Salvar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="checkin-btn bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition-colors ml-4" data-exercise-id="${exercise.id}">
+                        <i data-feather="check"></i>
+                    </button>
+                </div>
+            `;
+            content.appendChild(exerciseCard);
         });
-    </script>
+
+        feather.replace();
+    }
+
+    function loadRunningScreen() {
+        const runningWorkouts = database.userRunningWorkouts[currentStudentEmail] || [];
+        
+        const title = document.getElementById('training-title');
+        const content = document.getElementById('training-content-wrapper');
+        
+        title.textContent = 'Treino de Corrida';
+        content.innerHTML = '';
+
+        if (runningWorkouts.length === 0) {
+            content.innerHTML = `
+                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 text-center">
+                    <i data-feather="frown" class="w-16 h-16 text-gray-400 mx-auto mb-4"></i>
+                    <h3 class="text-xl font-bold text-white mb-2">Nenhum treino de corrida</h3>
+                    <p class="text-gray-400">Treinos de corrida serão adicionados em breve.</p>
+                </div>
+            `;
+            feather.replace();
+            return;
+        }
+
+        runningWorkouts.forEach((workout) => {
+            const methodClass = `running-title-${workout.method.toLowerCase()}`;
+            const card = document.createElement('div');
+            card.className = 'running-session-card bg-gray-800 p-4 rounded-xl border border-gray-700 mb-4';
+            card.innerHTML = `
+                <div class="flex justify-between items-start mb-3">
+                    <h3 class="${methodClass} font-bold text-lg">${workout.method}</h3>
+                    <button class="checkin-btn bg-green-600 hover:bg-green-700 text-white text-xs py-1 px-3 rounded-lg transition-colors" data-workout-method="${workout.method}">
+                        <i data-feather="check" class="w-3 h-3"></i> Realizado
+                    </button>
+                </div>
+                <p class="text-white mb-2"><strong>Detalhes:</strong> ${workout.details}</p>
+                <div class="grid grid-cols-2 gap-2 text-sm">
+                    <div><span class="text-gray-400">Velocidade:</span> <span class="text-white">${workout.speed}</span></div>
+                    <div><span class="text-gray-400">Pace:</span> <span class="text-white">${workout.pace}</span></div>
+                    <div><span class="text-gray-400">Tempo:</span> <span class="text-white">${workout.time}</span></div>
+                    <div><span class="text-gray-400">FC Alvo:</span> <span class="text-white">${workout.fcAlvo}</span></div>
+                </div>
+            `;
+            content.appendChild(card);
+        });
+
+        feather.replace();
+    }
+
+    function loadPeriodizationScreen() {
+        const periodization = database.trainingPlans[currentStudentEmail]?.periodizacao || [];
+        
+        const title = document.getElementById('training-title');
+        const content = document.getElementById('training-content-wrapper');
+        
+        title.textContent = 'Periodização';
+        content.innerHTML = '';
+
+        if (periodization.length === 0) {
+            content.innerHTML = `
+                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 text-center">
+                    <i data-feather="frown" class="w-16 h-16 text-gray-400 mx-auto mb-4"></i>
+                    <h3 class="text-xl font-bold text-white mb-2">Periodização não definida</h3>
+                    <p class="text-gray-400">Sua periodização será definida pelo professor.</p>
+                </div>
+            `;
+            feather.replace();
+            return;
+        }
+
+        periodization.forEach((phase) => {
+            const phaseCard = document.createElement('div');
+            phaseCard.className = 'bg-gray-800 p-4 rounded-xl border border-gray-700 mb-4';
+            phaseCard.innerHTML = `
+                <h3 class="font-bold text-white text-lg mb-3">${phase.week} - ${phase.phase}</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                    <div><span class="text-gray-400">Método:</span> <span class="text-white">${phase.methods}</span></div>
+                    <div><span class="text-gray-400">Repetições:</span> <span class="text-white">${phase.reps}</span></div>
+                    <div><span class="text-gray-400">Volume:</span> <span class="text-white">${phase.volume}</span></div>
+                    <div><span class="text-gray-400">Intensidade:</span> <span class="text-white">${phase.intensity}</span></div>
+                    <div><span class="text-gray-400">Recuperação:</span> <span class="text-white">${phase.recovery}</span></div>
+                </div>
+            `;
+            content.appendChild(phaseCard);
+        });
+
+        feather.replace();
+    }
+
+    // === SISTEMA DE CHECK-IN ===
+    function registerCheckin(type, subtype = null) {
+        if (!currentStudentEmail) return;
+        
+        const today = new Date().toISOString().split('T')[0];
+        
+        if (!database.trainingPlans[currentStudentEmail].attendance) {
+            database.trainingPlans[currentStudentEmail].attendance = {};
+        }
+        
+        database.trainingPlans[currentStudentEmail].attendance[today] = {
+            type: type,
+            subtype: subtype
+        };
+        
+        // Atualizar o calendário
+        renderCalendar();
+        
+        // Atualizar a plataforma de evolução
+        updateEvolutionPlatform();
+        
+        // Feedback visual
+        alert(`Check-in realizado! Treino ${type}${subtype ? ' ' + subtype : ''} registrado para hoje.`);
+    }
+
+    // === SISTEMA DE CALENDÁRIO ===
+    function renderCalendar() {
+        const attendance = database.trainingPlans[currentStudentEmail]?.attendance || {};
+        
+        const monthYear = document.getElementById('calendar-month-year');
+        const grid = document.getElementById('calendar-grid');
+        
+        const year = currentCalendarDate.getFullYear();
+        const month = currentCalendarDate.getMonth();
+        
+        monthYear.textContent = currentCalendarDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+        
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const daysInMonth = lastDay.getDate();
+        const startingDay = firstDay.getDay();
+        
+        grid.innerHTML = '';
+        
+        // Dias vazios no início
+        for (let i = 0; i < startingDay; i++) {
+            const emptyDay = document.createElement('div');
+            emptyDay.className = 'calendar-day empty';
+            grid.appendChild(emptyDay);
+        }
+        
+        // Dias do mês
+        const today = new Date().toISOString().split('T')[0];
+        
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const dayAttendance = attendance[dateStr];
+            const isToday = dateStr === today;
+            
+            const dayElement = document.createElement('div');
+            dayElement.className = `calendar-day ${isToday ? 'today' : ''} ${
+                dayAttendance ? `has-treino treino-${dayAttendance.type === 'running' ? 'F' : dayAttendance.type}` : ''
+            }`;
+            dayElement.textContent = day;
+            dayElement.title = dayAttendance ? `Treino ${dayAttendance.type}${dayAttendance.subtype ? ' ' + dayAttendance.subtype : ''} realizado` : 'Sem treino';
+            
+            grid.appendChild(dayElement);
+        }
+    }
+
+    // === EVENT LISTENERS ===
+    document.addEventListener('click', (e) => {
+        // Login
+        const userCard = e.target.closest('.user-card');
+        if (userCard) {
+            const userEmail = userCard.dataset.userEmail;
+            const user = database.users.find(u => u.email === userEmail);
+            if (user) {
+                populateStudentProfile(user.id);
+                showScreen('studentProfileScreen');
+            }
+            return;
+        }
+
+        // Lista de alunos
+        const studentCard = e.target.closest('.student-card');
+        if (studentCard) {
+            const studentId = studentCard.dataset.studentId;
+            populateStudentProfile(studentId);
+            showScreen('studentProfileScreen');
+            return;
+        }
+
+        // Botões de voltar
+        const backBtn = e.target.closest('.back-btn');
+        if (backBtn) {
+            const target = backBtn.dataset.target;
+            showScreen(target);
+            return;
+        }
+
+        // Navegação inferior
+        const navBtn = e.target.closest('.nav-btn');
+        if (navBtn) {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-red-500');
+                btn.classList.add('text-gray-400', 'hover:text-white');
+            });
+            navBtn.classList.remove('text-gray-400', 'hover:text-white');
+            navBtn.classList.add('text-red-500');
+            const targetScreen = navBtn.dataset.target;
+            showScreen(targetScreen);
+            return;
+        }
+
+        // Botões de ação no perfil
+        const actionBtn = e.target.closest('.profile-action-btn');
+        if (actionBtn) {
+            const action = actionBtn.dataset.action;
+            if (action === 'A' || action === 'B') {
+                loadTrainingScreen(action);
+                showScreen('trainingScreen');
+            } else if (action === 'corrida') {
+                loadRunningScreen();
+                showScreen('trainingScreen');
+            } else if (action === 'periodizacao') {
+                loadPeriodizationScreen();
+                showScreen('trainingScreen');
+            }
+            return;
+        }
+
+        // Check-in de exercícios
+        const checkinBtn = e.target.closest('.checkin-btn');
+        if (checkinBtn) {
+            const exerciseId = checkinBtn.dataset.exerciseId;
+            const workoutMethod = checkinBtn.dataset.workoutMethod;
+            
+            if (exerciseId) {
+                // Check-in de exercício de musculação
+                registerCheckin(currentTrainingType);
+                checkinBtn.classList.add('checkin-done');
+                checkinBtn.innerHTML = '<i data-feather="check"></i>';
+                feather.replace();
+            } else if (workoutMethod) {
+                // Check-in de treino de corrida
+                registerCheckin('running', workoutMethod);
+                checkinBtn.classList.add('checkin-done');
+                checkinBtn.innerHTML = '<i data-feather="check" class="w-3 h-3"></i> Realizado';
+                feather.replace();
+            }
+            return;
+        }
+
+        // Calendário
+        const prevMonthBtn = e.target.closest('#prev-month-btn');
+        if (prevMonthBtn) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+            renderCalendar();
+            return;
+        }
+
+        const nextMonthBtn = e.target.closest('#next-month-btn');
+        if (nextMonthBtn) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+            renderCalendar();
+            return;
+        }
+    });
+
+    // === INICIALIZAÇÃO DO APP ===
+    document.addEventListener('DOMContentLoaded', () => {
+        feather.replace();
+        
+        const splash = document.getElementById('splashScreen');
+        const app = document.getElementById('appContainer');
+
+        setTimeout(() => {
+            splash.classList.add('fade-out');
+            setTimeout(() => {
+                splash.style.display = 'none';
+                app.style.display = 'flex';
+                app.classList.remove('hidden');
+                
+                populateUserSelection();
+                populateStudentList();
+                showScreen('loginScreen');
+            }, 500);
+        }, 1500);
+    });
+</script>
+
 </body>
 </html>
