@@ -1,479 +1,222 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>AB Fit Outdoor - Assessoria Esportiva</title>
+<div id="sleepScreen" class="screen p-6 pt-10">
+    <header class="flex items-center justify-between pb-4">
+        <button class="back-btn p-2 rounded-full hover:bg-gray-800" data-target="studentProfileScreen">
+            <i data-feather="arrow-left" class="text-gray-300"></i>
+        </button>
+        <h1 class="text-2xl font-bold text-white">Análise de Sono</h1>
+        <div class="w-10"></div>
+    </header>
     
-    <!-- CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #000; 
-            margin: 0; 
-            padding: 0; 
-        }
-        .screen { 
-            display: none; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            overflow-y: auto; 
-            background-color: #000; 
-        }
-        .screen.active { 
-            display: block; 
-        }
-        #splashScreen.fade-out { 
-            opacity: 0; 
-            transition: opacity 0.5s; 
-        }
-
-        .splash-title {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            letter-spacing: -0.02em;
-        }
-        
-        .splash-subtitle {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .pulse-glow {
-            animation: pulse-glow 2s ease-in-out infinite alternate;
-        }
-        
-        @keyframes pulse-glow {
-            from {
-                filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.3));
-            }
-            to {
-                filter: drop-shadow(0 0 20px rgba(239, 68, 68, 0.6));
-            }
-        }
-
-        .user-card, .student-card {
-            transition: all 0.3s ease;
-        }
-        .user-card:hover, .student-card:hover {
-            transform: translateX(4px);
-            border-color: #3b82f6;
-        }
-    </style>
-</head>
-<body class="overscroll-none">
-
-    <!-- Tela de Splash -->
-    <div id="splashScreen" class="w-full h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
-        <!-- Efeito de background animado -->
-        <div class="absolute inset-0 opacity-20">
-            <div class="absolute top-1/4 left-1/4 w-32 h-32 bg-red-500 rounded-full blur-3xl animate-pulse"></div>
-            <div class="absolute bottom-1/4 right-1/4 w-40 h-40 bg-blue-500 rounded-full blur-3xl animate-pulse delay-1000"></div>
-            <div class="absolute top-1/2 right-1/3 w-28 h-28 bg-green-500 rounded-full blur-3xl animate-pulse delay-500"></div>
-        </div>
-        
-        <div class="relative z-10 text-center px-6">
-            <!-- Título Principal -->
-            <h1 class="splash-title text-6xl md:text-7xl font-black mb-4 leading-tight pulse-glow">
-                AB<span class="text-red-500" style="-webkit-text-fill-color: #ef4444;">FIT</span>
-            </h1>
+    <div class="space-y-6 pb-24">
+        <!-- Cartão Principal - Pontuação -->
+        <div class="bg-gradient-to-br from-blue-900 to-purple-900 p-6 rounded-3xl border border-blue-700 text-center">
+            <div class="flex justify-between items-start mb-4">
+                <div class="text-left">
+                    <p class="text-blue-300 text-sm font-bold">Sono</p>
+                    <p class="text-white text-lg font-bold">Esta noite</p>
+                </div>
+                <div class="bg-blue-800 px-3 py-1 rounded-full">
+                    <p class="text-blue-200 text-xs font-bold">7h 30min</p>
+                </div>
+            </div>
             
-            <!-- Subtítulo -->
-            <h2 class="splash-subtitle text-2xl md:text-3xl font-semibold mb-8 tracking-wider">
-                OUTDOOR
-            </h2>
+            <div class="my-8">
+                <div class="text-7xl font-bold text-white mb-2">72,0</div>
+                <div class="text-blue-300 text-lg font-bold mb-1">Razoável</div>
+                <div class="text-blue-200 text-sm">O descanso é seu amigo</div>
+            </div>
             
-            <!-- Tagline -->
-            <p class="text-gray-400 text-lg font-medium mb-12 max-w-md mx-auto leading-relaxed">
-                Sua jornada fitness começa aqui
-            </p>
-            
-            <!-- Loading Indicator -->
-            <div class="flex justify-center items-center space-x-2">
-                <div class="w-2 h-2 bg-red-500 rounded-full animate-bounce"></div>
-                <div class="w-2 h-2 bg-red-500 rounded-full animate-bounce delay-100"></div>
-                <div class="w-2 h-2 bg-red-500 rounded-full animate-bounce delay-200"></div>
+            <div class="bg-blue-800 bg-opacity-50 p-4 rounded-2xl text-left">
+                <p class="text-white text-sm font-bold mb-2">Você se movimentou 65 minutos a mais ontem do que seu tempo em atividade médio da semana!</p>
+                <p class="text-blue-200 text-sm">Esse aumento de atividade pode estar sobrecarregando seu corpo. Não exagere e procure priorizar o descanso adequado.</p>
             </div>
         </div>
-        
-        <!-- Versão -->
-        <div class="absolute bottom-8 left-0 right-0 text-center">
-            <p class="text-gray-600 text-sm font-medium">v2.0.0</p>
+
+        <!-- Fatores da Pontuação -->
+        <div class="bg-gray-900 p-5 rounded-2xl border border-gray-700">
+            <h2 class="text-lg font-bold text-white mb-4">Fatores da pontuação de energia</h2>
+            
+            <div class="space-y-3">
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-300 text-sm">Média de tempo de sono</span>
+                    <span class="text-green-400 text-sm font-bold">Bom</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-300 text-sm">Consistência de tempo de sono</span>
+                    <span class="text-green-400 text-sm font-bold">Bom</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-300 text-sm">Regularidade do sono</span>
+                    <span class="text-emerald-400 text-sm font-bold">Excelente</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-300 text-sm">Hora de dormir</span>
+                    <span class="text-green-400 text-sm font-bold">Bom</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-300 text-sm">Atividade do dia anterior</span>
+                    <span class="text-yellow-400 text-sm font-bold">Razoável</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-300 text-sm">Consistência da atividade</span>
+                    <span class="text-green-400 text-sm font-bold">Bom</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-300 text-sm">FC durante o sono</span>
+                    <span class="text-emerald-400 text-sm font-bold">Excelente</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-300 text-sm">VFC durante o sono</span>
+                    <span class="text-emerald-400 text-sm font-bold">Excelente</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Métricas Detalhadas -->
+        <div class="bg-gray-900 p-5 rounded-2xl border border-gray-700">
+            <h2 class="text-lg font-bold text-white mb-4">Mais sobre o sono da noite passada</h2>
+            
+            <!-- Frequência Cardíaca -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-gray-300 text-sm font-bold">Frequência cardíaca durante o sono</span>
+                    <span class="text-blue-400 text-sm">Média: 65 bpm</span>
+                </div>
+                <div class="bg-gray-800 rounded-full h-3">
+                    <div class="bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full" style="width: 65%"></div>
+                </div>
+                <div class="flex justify-between mt-2">
+                    <span class="text-gray-400 text-xs">40 bpm</span>
+                    <span class="text-gray-400 text-xs">110 bpm</span>
+                </div>
+            </div>
+
+            <!-- Variação da FC -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-gray-300 text-sm font-bold">Variação da frequência cardíaca durante o sono</span>
+                    <span class="text-blue-400 text-sm">Média: 38 ms</span>
+                </div>
+                <div class="bg-gray-800 rounded-full h-3">
+                    <div class="bg-gradient-to-r from-purple-400 to-pink-500 h-3 rounded-full" style="width: 45%"></div>
+                </div>
+                <div class="flex justify-between mt-2">
+                    <span class="text-gray-400 text-xs">20 ms</span>
+                    <span class="text-gray-400 text-xs">81 ms</span>
+                </div>
+            </div>
+
+            <!-- Temperatura -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-gray-300 text-sm font-bold">Temperatura da pele durante o sono</span>
+                    <span class="text-blue-400 text-sm">± 1,0 °C</span>
+                </div>
+                <div class="bg-gray-800 rounded-full h-3">
+                    <div class="bg-gradient-to-r from-yellow-400 to-red-500 h-3 rounded-full" style="width: 60%"></div>
+                </div>
+                <div class="flex justify-between mt-2">
+                    <span class="text-gray-400 text-xs">-2,5 °C</span>
+                    <span class="text-gray-400 text-xs">+2,5 °C</span>
+                </div>
+            </div>
+
+            <!-- Frequência Respiratória -->
+            <div>
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-gray-300 text-sm font-bold">Frequência respiratória durante o sono</span>
+                    <span class="text-blue-400 text-sm">Média: 15 respirações/min</span>
+                </div>
+                <div class="bg-gray-800 rounded-full h-3">
+                    <div class="bg-gradient-to-r from-cyan-400 to-blue-500 h-3 rounded-full" style="width: 55%"></div>
+                </div>
+                <div class="flex justify-between mt-2">
+                    <span class="text-gray-400 text-xs">10/min</span>
+                    <span class="text-gray-400 text-xs">25/min</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monitoramento Ativo -->
+        <div class="bg-gray-900 p-5 rounded-2xl border border-gray-700">
+            <div class="text-center mb-4">
+                <i class="fas fa-moon text-blue-400 text-4xl mb-3"></i>
+                <h2 class="text-xl font-bold text-white mb-2">Monitoramento Noturno</h2>
+                <p class="text-gray-400 text-sm">Coloque o celular na cama para análise contínua</p>
+            </div>
+            
+            <div id="sleep-tracker-controls">
+                <button id="startSleepBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-play mr-2"></i> Iniciar Monitoramento
+                </button>
+            </div>
+            
+            <div id="sleep-tracker-active" class="hidden mt-4">
+                <div class="grid grid-cols-3 gap-3 mb-4">
+                    <div class="bg-gray-800 p-3 rounded-xl text-center">
+                        <h2 class="text-sm text-gray-400 font-bold">Duração</h2>
+                        <p id="sleepDuration" class="text-xl font-bold text-white">00:00:00</p>
+                    </div>
+                    <div class="bg-gray-800 p-3 rounded-xl text-center">
+                        <h2 class="text-sm text-gray-400 font-bold">Movimentos</h2>
+                        <p id="sleepMovements" class="text-xl font-bold text-white">0</p>
+                    </div>
+                    <div class="bg-gray-800 p-3 rounded-xl text-center">
+                        <h2 class="text-sm text-gray-400 font-bold">Ruídos</h2>
+                        <p id="sleepNoises" class="text-xl font-bold text-white">0</p>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-800 p-4 rounded-xl mb-4">
+                    <p class="text-sm text-gray-400 mb-2 font-bold">Nível de Ruído Ambiente</p>
+                    <div id="volumeMeter" class="bg-gray-700 rounded-full h-3">
+                        <div id="volumeBar" class="bg-blue-500 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <button id="stopSleepBtn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-stop mr-2"></i> Parar e Salvar Análise
+                </button>
+            </div>
+        </div>
+
+        <!-- Histórico -->
+        <div class="bg-gray-900 p-5 rounded-2xl border border-gray-700">
+            <h2 class="text-lg font-bold text-white mb-4">Histórico de Sono</h2>
+            <div id="sleepHistoryList" class="space-y-3">
+                <div class="flex justify-between items-center p-3 bg-gray-800 rounded-xl">
+                    <div>
+                        <p class="text-white font-bold">Ontem</p>
+                        <p class="text-gray-400 text-sm">7h 15min • 74,2 pontos</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-green-400 text-sm font-bold">Bom</span>
+                        <p class="text-gray-400 text-sm">12 movimentos</p>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center p-3 bg-gray-800 rounded-xl">
+                    <div>
+                        <p class="text-white font-bold">25/09</p>
+                        <p class="text-gray-400 text-sm">6h 45min • 68,5 pontos</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-yellow-400 text-sm font-bold">Razoável</span>
+                        <p class="text-gray-400 text-sm">18 movimentos</p>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center p-3 bg-gray-800 rounded-xl">
+                    <div>
+                        <p class="text-white font-bold">24/09</p>
+                        <p class="text-gray-400 text-sm">8h 02min • 82,1 pontos</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-emerald-400 text-sm font-bold">Excelente</span>
+                        <p class="text-gray-400 text-sm">8 movimentos</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-    <!-- App Container -->
-    <div id="appContainer" class="hidden h-screen flex flex-col max-w-lg mx-auto bg-black">
-        <main class="flex-grow relative overflow-hidden">
-
-            <!-- Tela de Login -->
-            <div id="loginScreen" class="screen active p-6">
-                <div class="text-center mb-8">
-                    <h1 class="text-3xl font-bold text-white mb-2">AB Fit Outdoor</h1>
-                    <p class="text-gray-400">Selecione seu perfil para continuar</p>
-                </div>
-                
-                <div id="user-selection-container" class="space-y-4">
-                    <!-- Os usuários serão carregados aqui pelo JavaScript -->
-                </div>
-            </div>
-
-            <!-- Tela de Lista de Alunos -->
-            <div id="studentListScreen" class="screen p-6">
-                <header class="flex items-center justify-between pb-4">
-                    <button class="back-btn p-2 rounded-full hover:bg-gray-800" data-target="loginScreen">
-                        <i class="fas fa-arrow-left text-gray-300"></i>
-                    </button>
-                    <h1 class="text-2xl font-bold text-white">Todos os Alunos</h1>
-                    <div class="w-10"></div>
-                </header>
-                
-                <div id="student-list-container" class="space-y-4">
-                    <!-- Os alunos serão carregados aqui pelo JavaScript -->
-                </div>
-            </div>
-
-            <!-- Tela de Perfil do Aluno -->
-            <div id="studentProfileScreen" class="screen p-6 pt-10">
-                <header class="flex items-center justify-between pb-4">
-                    <button class="back-btn p-2 rounded-full hover:bg-gray-800" data-target="studentListScreen">
-                        <i class="fas fa-arrow-left text-gray-300"></i>
-                    </button>
-                    <h1 class="text-2xl font-bold text-white">Perfil</h1>
-                    <div class="w-10"></div>
-                </header>
-                
-                <div id="student-profile-info" class="mb-6">
-                    <!-- Informações do aluno serão carregadas aqui -->
-                </div>
-                
-                <div id="student-profile-buttons" class="grid grid-cols-2 gap-4">
-                    <!-- Botões de ação serão carregados aqui -->
-                </div>
-            </div>
-
-        </main>
-
-        <!-- Navegação Inferior -->
-        <footer id="bottom-nav" class="flex-shrink-0 bg-gray-900 border-t border-gray-700 py-3 px-6">
-            <div class="flex justify-around items-center">
-                <button class="nav-btn flex flex-col items-center text-red-500" data-target="studentProfileScreen">
-                    <i class="fas fa-user text-lg mb-1"></i>
-                    <span class="text-xs font-bold">Perfil</span>
-                </button>
-                <button class="nav-btn flex flex-col items-center text-gray-400 hover:text-white" data-target="studentListScreen">
-                    <i class="fas fa-users text-lg mb-1"></i>
-                    <span class="text-xs font-bold">Alunos</span>
-                </button>
-                <button class="nav-btn flex flex-col items-center text-gray-400 hover:text-white" data-target="trainingScreen">
-                    <i class="fas fa-dumbbell text-lg mb-1"></i>
-                    <span class="text-xs font-bold">Treinos</span>
-                </button>
-            </div>
-        </footer>
-    </div>
-
-    <!-- TODO O JAVASCRIPT EM UM ÚNICO ARQUIVO -->
-    <script>
-        // =============================================
-        // AB FIT OUTDOOR - APLICAÇÃO COMPLETA
-        // =============================================
-        
-        console.log('🔮 AB Fit Outdoor - Iniciando...');
-        
-        // === BANCO DE DADOS SIMPLES ===
-        const database = {
-            users: [
-                { 
-                    id: 1, 
-                    name: "André Brito", 
-                    email: "britodeandrade@gmail.com", 
-                    photo: "https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/WsTwhcQeE99iAkUHmCmn/pub/3Zy4n6ZmWp9DW98VtXpO.jpeg",
-                    level: "Avançado",
-                    joinDate: "2024-01-15"
-                },
-                { 
-                    id: 2, 
-                    name: "Marcelly Bispo", 
-                    email: "marcellybispo92@gmail.com", 
-                    photo: "https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/WsTwhcQeE99iAkUHmCmn/pub/2VWhNV4eSyDNkwEzPGvq.jpeg",
-                    level: "Intermediário", 
-                    joinDate: "2024-02-10"
-                },
-                { 
-                    id: 3, 
-                    name: "Marcia Brito", 
-                    email: "andrademarcia.ucam@gmail.com", 
-                    photo: "https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/WsTwhcQeE99iAkUHmCmn/pub/huS3I3wDTHbXGY1EuLjf.jpg",
-                    level: "Iniciante",
-                    joinDate: "2024-03-05"
-                },
-                { 
-                    id: 4, 
-                    name: "Liliane Torres", 
-                    email: "lilicatorres@gmail.com", 
-                    photo: "https://i.ibb.co/7j6x0gG/liliane-torres.jpg",
-                    level: "Intermediário",
-                    joinDate: "2024-01-20"
-                }
-            ],
-            trainingPlans: {},
-            sleepHistory: {}
-        };
-
-        // === VARIÁVEIS GLOBAIS ===
-        let currentStudentEmail = null;
-
-        // === FUNÇÕES PRINCIPAIS ===
-        function showScreen(screenId) {
-            console.log('🔄 Mudando para tela:', screenId);
-            
-            // Esconder todas as telas
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
-            });
-            
-            // Mostrar tela alvo
-            const targetScreen = document.getElementById(screenId);
-            if (targetScreen) {
-                targetScreen.classList.add('active');
-            }
-            
-            // Mostrar/ocultar navegação
-            const bottomNav = document.getElementById('bottom-nav');
-            if (bottomNav) {
-                bottomNav.style.display = screenId === 'loginScreen' ? 'none' : 'flex';
-            }
-        }
-
-        function populateUserSelection() {
-            console.log('👥 Carregando seleção de usuários...');
-            const container = document.getElementById('user-selection-container');
-            
-            if (!container) {
-                console.error('❌ Container de usuários não encontrado');
-                return;
-            }
-            
-            container.innerHTML = database.users.map(user => `
-                <div class="user-card flex items-center p-4 bg-gray-800 rounded-xl border border-gray-700 cursor-pointer hover:bg-gray-700 transition" data-user-email="${user.email}">
-                    <img src="${user.photo}" alt="${user.name}" class="w-14 h-14 rounded-full object-cover mr-4 border-2 border-gray-600">
-                    <div class="flex-grow">
-                        <p class="font-bold text-white text-lg">${user.name}</p>
-                        <span class="text-sm text-gray-400 font-bold">${user.level} • Clique para acessar</span>
-                    </div>
-                    <i class="fas fa-chevron-right text-red-500 text-lg"></i>
-                </div>
-            `).join('');
-            
-            console.log('✅ Usuários carregados:', database.users.length);
-        }
-
-        function populateStudentList() {
-            console.log('📚 Carregando lista de alunos...');
-            const container = document.getElementById('student-list-container');
-            
-            if (!container) {
-                console.error('❌ Container de alunos não encontrado');
-                return;
-            }
-            
-            container.innerHTML = database.users.map(user => `
-                <div class="student-card flex items-center p-4 bg-gray-800 rounded-xl border border-gray-700 cursor-pointer hover:bg-gray-700 transition" data-student-id="${user.id}">
-                    <img src="${user.photo}" alt="${user.name}" class="w-14 h-14 rounded-full object-cover mr-4 border-2 border-blue-500">
-                    <div class="flex-grow">
-                        <p class="font-bold text-white text-lg">${user.name}</p>
-                        <span class="text-sm text-gray-400 font-bold">${user.level} • Ver perfil completo</span>
-                    </div>
-                    <i class="fas fa-user text-blue-500 text-lg"></i>
-                </div>
-            `).join('');
-        }
-
-        function populateStudentProfile(studentEmail) {
-            console.log('👤 Carregando perfil:', studentEmail);
-            currentStudentEmail = studentEmail;
-            
-            const student = database.users.find(s => s.email === studentEmail);
-            if (!student) {
-                console.error('❌ Aluno não encontrado:', studentEmail);
-                return;
-            }
-
-            // Atualizar informações do perfil
-            const profileInfo = document.getElementById('student-profile-info');
-            if (profileInfo) {
-                profileInfo.innerHTML = `
-                    <div class="flex items-center mb-6">
-                        <img src="${student.photo}" alt="${student.name}" class="w-20 h-20 rounded-full object-cover mr-4 border-2 border-gray-600">
-                        <div>
-                            <h1 class="text-2xl font-bold text-white">${student.name}</h1>
-                            <p class="text-gray-400 font-bold">${student.email}</p>
-                            <p class="text-gray-500 text-sm font-bold">${student.level} • Desde ${new Date(student.joinDate).toLocaleDateString('pt-BR')}</p>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            // Atualizar botões de ação
-            const profileButtons = document.getElementById('student-profile-buttons');
-            if (profileButtons) {
-                profileButtons.innerHTML = `
-                    <button class="profile-action-btn bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition transform hover:scale-105" data-action="A">
-                        <i class="fas fa-shield-alt text-xl"></i>
-                        <span class="text-xs font-bold">TREINO A</span>
-                    </button>
-                    <button class="profile-action-btn bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition transform hover:scale-105" data-action="B">
-                        <i class="fas fa-bolt text-xl"></i>
-                        <span class="text-xs font-bold">TREINO B</span>
-                    </button>
-                    <button class="profile-action-btn bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition transform hover:scale-105" data-action="corrida">
-                        <i class="fas fa-running text-xl"></i>
-                        <span class="text-xs font-bold">CORRIDA</span>
-                    </button>
-                    <button class="profile-action-btn bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition transform hover:scale-105" data-action="periodizacao">
-                        <i class="fas fa-calendar-alt text-xl"></i>
-                        <span class="text-xs font-bold">PERIODIZAÇÃO</span>
-                    </button>
-                    <button class="profile-action-btn bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition transform hover:scale-105" data-action="outdoor">
-                        <i class="fas fa-map-marker-alt text-xl"></i>
-                        <span class="text-xs font-bold">OUTDOOR</span>
-                    </button>
-                    <button class="profile-action-btn bg-teal-600 hover:bg-teal-700 text-white font-bold py-4 rounded-xl flex flex-col items-center justify-center space-y-2 transition transform hover:scale-105" data-action="sono">
-                        <i class="fas fa-moon text-xl"></i>
-                        <span class="text-xs font-bold">SONO</span>
-                    </button>
-                `;
-            }
-            
-            console.log('✅ Perfil carregado com sucesso');
-        }
-
-        // === INICIALIZAÇÃO ===
-        function initApp() {
-            console.log('🚀 Inicializando aplicação...');
-            
-            // Carregar dados iniciais
-            populateUserSelection();
-            populateStudentList();
-            
-            // Mostrar tela de login
-            showScreen('loginScreen');
-            
-            console.log('✅ AB Fit Outdoor carregado com sucesso!');
-        }
-
-        // === EVENT LISTENERS ===
-        document.addEventListener('click', function(e) {
-            console.log('🎯 Click detectado:', e.target);
-            
-            // Login de usuário
-            if (e.target.closest('.user-card')) {
-                const userCard = e.target.closest('.user-card');
-                const userEmail = userCard.dataset.userEmail;
-                console.log('👤 Usuário selecionado:', userEmail);
-                
-                populateStudentProfile(userEmail);
-                showScreen('studentProfileScreen');
-                return;
-            }
-            
-            // Seleção de aluno na lista
-            if (e.target.closest('.student-card')) {
-                const studentCard = e.target.closest('.student-card');
-                const studentId = studentCard.dataset.studentId;
-                const student = database.users.find(s => s.id == studentId);
-                
-                if (student) {
-                    console.log('🎓 Aluno selecionado:', student.name);
-                    populateStudentProfile(student.email);
-                    showScreen('studentProfileScreen');
-                }
-                return;
-            }
-            
-            // Navegação (botões voltar e nav)
-            if (e.target.closest('.back-btn, .nav-btn')) {
-                const button = e.target.closest('.back-btn, .nav-btn');
-                const targetScreen = button.dataset.target;
-                console.log('🔙 Navegando para:', targetScreen);
-                
-                showScreen(targetScreen);
-                return;
-            }
-            
-            // Ações do perfil
-            if (e.target.closest('.profile-action-btn')) {
-                const actionBtn = e.target.closest('.profile-action-btn');
-                const action = actionBtn.dataset.action;
-                console.log('⚡ Ação do perfil:', action);
-                
-                alert(`Funcionalidade ${action} será implementada em breve!`);
-                return;
-            }
-        });
-
-        // === INICIAR APLICAÇÃO ===
-        console.log('🎯 Aguardando carregamento completo...');
-        
-        // Aguardar o DOM estar completamente pronto
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', function() {
-                console.log('✅ DOM completamente carregado');
-                startApp();
-            });
-        } else {
-            console.log('✅ DOM já carregado');
-            startApp();
-        }
-
-        function startApp() {
-            console.log('🔥 Iniciando sequência de inicialização...');
-            
-            // Transição da splash screen após 3 segundos
-            setTimeout(function() {
-                const splashScreen = document.getElementById('splashScreen');
-                const appContainer = document.getElementById('appContainer');
-                
-                if (splashScreen && appContainer) {
-                    console.log('🎬 Fazendo transição para o app...');
-                    
-                    // Efeito de fade out
-                    splashScreen.classList.add('fade-out');
-                    
-                    // Mostrar app após animação
-                    setTimeout(function() {
-                        splashScreen.style.display = 'none';
-                        appContainer.classList.remove('hidden');
-                        
-                        // Inicializar aplicação
-                        initApp();
-                        
-                        console.log('🎉 APLICAÇÃO INICIADA COM SUCESSO!');
-                    }, 800);
-                } else {
-                    console.error('💥 Elementos principais não encontrados!');
-                }
-            }, 3000);
-        }
-    </script>
-</body>
-</html
+</div>
